@@ -4,6 +4,7 @@ services:
   web:
     build: .
     container_name: isla_transfers_web
+    restart: unless-stopped
     ports:
       - "8080:80"          
     volumes:
@@ -14,7 +15,7 @@ services:
   db:
     image: mysql:8.0
     container_name: isla_transfers_db
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: isla_transfers
@@ -25,5 +26,16 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: isla_transfers_pma
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db  
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"
 volumes:
   db_data:
