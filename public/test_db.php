@@ -1,15 +1,15 @@
 <?php
-    $servername = "db";      // <-- nombre del servicio en docker-compose
-    $username = "user";      // <-- igual al del compose
-    $password = "pass";
-    $database = "isla_transfers";
+echo "Iniciando prueba de conexión... <br><br>";
 
-    $conn = new mysqli($servername, $username, $password, $database);
+require_once '../config/database.php';
+require_once '../app/core/Database.php';
 
-    if ($conn->connect_error) {
-    die("❌ Conexión fallida: " . $conn->connect_error);
+try {
+    $db = new Database();
+
+    if ($db->connection) {
+        echo "✅ Conexión exitosa a la base de datos: " . DB_NAME . ".";
     }
-
-    echo "✅ Conexión exitosa a la base de datos!";
-    $conn->close();
-?>
+} catch (Exception $e) {
+    die("❌ Conexión fallida: " . $e->getMessage());
+}
