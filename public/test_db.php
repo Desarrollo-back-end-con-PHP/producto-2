@@ -1,7 +1,7 @@
 <?php
 echo "Iniciando prueba de conexión... <br><br>";
 
-require_once '../config/database.php';
+require_once '../app/config/config.php';
 require_once '../app/core/Database.php';
 
 try {
