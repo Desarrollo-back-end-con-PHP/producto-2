@@ -1,19 +1,24 @@
 <?php
-require_once __DIR__ . '/../core/Database.php';
 
-class Reserva {
+namespace App\Models;
+
+class Reserva
+{
     private $db;
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->connection;
+    // recibe la conexión que le pasa el controlador
+    public function __construct($db_connection)
+    {
+        //guarda la conexión
+        $this->db = $db_connection;
     }
 
     /**
      * Obtener todas las reservas asociadas a un usuario particular
      * según su email.
      */
-    public function obtenerReservasPorEmail($email) {
+    public function obtenerReservasPorEmail($email)
+    {
         $sql = "SELECT 
                     r.id_reserva,
                     r.localizador,
@@ -49,8 +54,9 @@ class Reserva {
      * Crear una nueva reserva hecha por un usuario particular.
      * (el localizador se genera automáticamente)
      */
-    public function crearReserva($email_cliente, $id_tipo_reserva, $id_destino, $fecha_entrada, $hora_entrada, $num_viajeros, $id_vehiculo, $numero_vuelo_entrada, $origen_vuelo_entrada, $fecha_vuelo_salida, $hora_vuelo_salida) {
-        
+    public function crearReserva($email_cliente, $id_tipo_reserva, $id_destino, $fecha_entrada, $hora_entrada, $num_viajeros, $id_vehiculo, $numero_vuelo_entrada, $origen_vuelo_entrada, $fecha_vuelo_salida, $hora_vuelo_salida)
+    {
+
         $localizador = uniqid("LOC-"); // genera un código único
         $fecha_actual = date("Y-m-d H:i:s");
 
@@ -95,4 +101,3 @@ class Reserva {
         return $stmt->execute();
     }
 }
-?>
