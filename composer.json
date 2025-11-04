@@ -19,7 +19,8 @@
             "App\\Controllers\\": "app/controllers/",
             "App\\Controllers\\Api\\": "app/controllers/api/",
             "App\\Models\\": "app/models/",
-            "App\\Helpers\\": "app/helpers/"
+            "App\\Helpers\\": "app/helpers/",
+            "App\\Core\\": "app/core/"
         }
     },
     "config": {

@@ -5,6 +5,9 @@ namespace App\Models;
 
 class Usuario
 {
+    /**
+     * constructor
+     */
     private $db;
 
     public function __construct($db_connection)
@@ -12,6 +15,9 @@ class Usuario
         // Creamos la conexión a la base de datos 
         $this->db = $db_connection;
     }
+
+    //public function registrar($usuario)
+
 
     /**
      *Obtener los datos personales del usuario por su ID.
