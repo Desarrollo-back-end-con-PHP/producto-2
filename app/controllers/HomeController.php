@@ -18,6 +18,7 @@ class HomeController extends BaseController
         $this->loadView('home', $data);
     }
 
+    //test de conexión a BBDD
     public function testdb()
     {
         echo "Iniciando prueba de conexión... <br><br>";
