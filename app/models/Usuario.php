@@ -16,7 +16,84 @@ class Usuario
         $this->db = $db_connection;
     }
 
-    //public function registrar($usuario)
+    /**
+     * función para registrar usuario
+     */
+    public function registrar($nombre, $email, $password)
+    {
+        //Se hashea la contraseña
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+        //para respetar el not null de la BBDD se rellenará con default
+        $apellido1_default = '';
+        $apellido2_default = '';
+        $direccion_default = '';
+        $codigoPostal_default = '';
+        $ciudad_default = '';
+        $pais_default = '';
+
+        //Consulta
+        $sql = "INSERT INTO transfer_viajeros (nombre,email,password, apellido1, apellido2, direccion, codigoPostal, ciudad, pais) VALUES (?,?,?,?,?,?,?,?,?)";
+
+        $stmt = $this->db->prepare($sql);
+
+        //si hay un error se sale
+        if ($stmt === false) {
+            error_log("Error al preparar la consulta: " . $this->db->error);
+            return false;
+        }
+        //se asocian los parámetros, sss indica 3 strings
+        $stmt->bind_param("sssssssss", $nombre, $email, $password_hash, $apellido1_default, $apellido2_default, $direccion_default, $codigoPostal_default, $ciudad_default, $pais_default);
+
+        try {
+            $stmt->execute();
+            return true; //usuario registrado
+        } catch (\mysqli_sql_exception $e) {
+
+            if ($e->getCode() === 1062) {
+                return false; // codigo de entidad duplicada, email duplicado error.
+            } else {
+                error_log("Error al ejecutar el registro, email duplicado: " . $e->getMessage());
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Función para verificar las credenciales para login
+     */
+    public function verificarCredenciales($email, $password)
+    {
+        //se prepara la consulta
+        $sql = "SELECT * FROM transfer_viajeros WHERE email = ?";
+        $stmt = $this->db->prepare($sql);
+
+        //si hay un error se sale
+        if ($stmt === false) {
+            error_log("Error al preparar la consulta: " . $this->db->error);
+            return false;
+        }
+
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows !== 1) {
+            return false; //no se encontró ningún  usuario con ese email
+        }
+
+        $usuario = $resultado->fetch_assoc();
+
+        //verificar contraseña
+        if (password_verify($password, $usuario['password'])) { //se compara el password con el hash de la bbdd
+            return $usuario;
+        } else {
+            return false; //contraseña incorrecta
+        }
+    }
+
+
 
 
     /**
