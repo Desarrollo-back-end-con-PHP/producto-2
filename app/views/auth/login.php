@@ -1,7 +1,7 @@
 <?php
 
 $error_msg = '';
-$succes_msg = '';
+$success_msg = '';
 //Mensajes de error:
 if (isset($_GET['error'])) {
     switch ($_GET['error']) {
@@ -45,7 +45,7 @@ if (isset($_GET['success'])) {
             <div class="card-body">
 
                 <!-- MOSTRAR MENSAJES -->
-                <?php if (!empty($succes_msg)): ?>
+                <?php if (!empty($success_msg)): ?>
                     <div class=" alert alert-success" role="alert">
                         <?php echo htmlspecialchars($success_msg); ?>
                     </div>
