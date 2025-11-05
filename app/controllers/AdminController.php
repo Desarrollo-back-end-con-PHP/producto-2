@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 use App\Models\Usuario;
 
-class AdminController extends BaseController
+class AdminController extends Controller
 {
     private $userModel;
 
     public function __construct()
     {
-        //Se llama al constructor padre (BaseController)
+        //Se llama al constructor padre (Controller)
         parent::__construct();
 
         // TODO: Añadir seguridad para que solo admins puedan acceder
@@ -20,7 +20,7 @@ class AdminController extends BaseController
             exit;
         }
 
-        $this->userModel = new Usuario($this->db);
+        $this->userModel = new Usuario();
     }
 
     public function index()

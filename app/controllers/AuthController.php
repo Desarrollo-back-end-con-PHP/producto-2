@@ -2,20 +2,20 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 use App\Models\Usuario;
 
-class AuthController extends BaseController
+class AuthController extends Controller
 {
 
-    private $userModel; //propiedad para guardar el modelo de usuario
+    private $userModel; 
 
     public function __construct()
     {
         // Se carga la conexión a la bbdd
         parent::__construct();
         //se crea una instancia del modelo Usuario
-        $this->userModel = new Usuario($this->db);
+        $this->userModel = new Usuario();
     }
 
     //muestra página login

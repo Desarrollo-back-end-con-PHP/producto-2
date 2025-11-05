@@ -3,7 +3,6 @@
 namespace App\Core;
 
 use App\Core\Database;
-use \mysqli; 
 
 /**
  * Clase Modelo Base

@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 use App\Models\Reserva;
 
-class ReservaController extends BaseController
+class ReservaController extends Controller
 {
     private $reservaModel;
 
     public function __construct()
     {
-        //Se llama al constructor padre (BaseController)
+        //Se llama al constructor padre (Controller)
         parent::__construct();
 
         //si el usuario NO esta logeado se redirige al login.

@@ -2,11 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 use App\Models\Usuario;
 use App\Helpers\ProfileMessageHelper; 
 
-class UsuarioController extends BaseController
+class UsuarioController extends Controller
 {
 
     // Declaramos la propiedad $userModel para guardar una instancia de la clase User
@@ -15,7 +15,7 @@ class UsuarioController extends BaseController
     // El constructor se ejecuta automáticamente al crear un objeto UserController
     public function __construct()
     {
-        //Se llama al constructor padre (BaseController)
+        //Se llama al constructor padre (Controller)
         parent::__construct();
 
         //si el usuario NO esta logeado se redirige al login.
@@ -47,7 +47,7 @@ class UsuarioController extends BaseController
      */
     public function actualizarDatos()
     {
-        // 1. Requerir que la petición sea POST, usando el método de BaseController
+        // 1. Requerir que la petición sea POST, usando el método de Controller
         $this->requireMethod('POST');
 
         // 2. Recoger y validar los datos del formulario

@@ -2,9 +2,9 @@
 
 namespace App\Controllers\Api;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 
-class AuthController extends BaseController
+class AuthController extends Controller
 {
 
     public function index()

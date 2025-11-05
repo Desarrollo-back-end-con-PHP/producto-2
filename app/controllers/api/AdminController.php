@@ -2,9 +2,9 @@
 
 namespace App\Controllers\Api;
 
-use App\Controllers\BaseController;
+use App\Core\Controller;
 
-class AdminController extends BaseController {
+class AdminController extends Controller {
 
     // public function __construct() {
 
