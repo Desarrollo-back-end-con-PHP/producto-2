@@ -10,12 +10,12 @@ class Controller
     {
         extract($data);
 
-        $viewFile = '../app/views/' . $viewName . '.php';
+        $viewFileRoute = '../app/views/' . $viewName . '.php';
 
-        if (file_exists($viewFile)) {
+        if (file_exists($viewFileRoute)) {
             require_once '../app/views/layout/header.php'; // Carga el header
 
-            require_once $viewFile; // Carga la vista específica
+            require_once $viewFileRoute; // Carga la vista específica
 
             require_once '../app/views/layout/footer.php'; // Carga el footer
         } else {
