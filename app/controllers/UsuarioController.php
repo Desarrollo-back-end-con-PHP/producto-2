@@ -46,7 +46,7 @@ class UsuarioController extends BaseController
 
         // 3. Cargar la vista usando la función loadView del BaseController
         // Le pasamos 'perfil/perfil_view' y los datos en un array asociativo.
-        $this->loadView('perfil/perfil_view', [
+        $this->loadView('user/myProfile', [
             'usuario' => $datosUsuario,
             'mensaje' => $_GET['mensaje'] ?? null // Para mostrar mensajes después de una acción
         ]);
@@ -85,10 +85,12 @@ class UsuarioController extends BaseController
         );
 
         // 4. Redirigir con mensaje
+        $redirectURL = APP_URL . '/usuario/mostrarPerfil'; 
+
         if ($exito) {
-            header('Location: /perfil?mensaje=exito_datos');
+            header('Location: ' . $redirectURL . '?mensaje=exito_datos');
         } else {
-            header('Location: /perfil?mensaje=error_datos');
+            header('Location: ' . $redirectURL . '?mensaje=error_datos');
         }
         exit();
     }
