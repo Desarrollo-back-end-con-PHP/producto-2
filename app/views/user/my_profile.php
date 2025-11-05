@@ -1,41 +1,14 @@
 <?php
+use App\Helpers\ProfileMessageHelper; 
 
-$mensaje = $data['mensaje'] ?? null;
-$claseAlerta = ''; // Clase de Bootstrap
-$textoMensaje = '';
 
-if ($mensaje) {
-    $claseAlerta = 'alert-danger'; 
-
-    switch ($mensaje) {
-        case 'exito_datos':
-            $claseAlerta = 'alert-success'; 
-            $textoMensaje = '¡Datos personales actualizados con éxito!';
-            break;
-        case 'error_datos':
-            $textoMensaje = 'Error al actualizar los datos personales. Inténtalo de nuevo.';
-            break;
-        case 'exito_pass':
-            $claseAlerta = 'alert-success'; 
-            $textoMensaje = '¡Contraseña actualizada con éxito!';
-            break;
-        case 'error_bd_pass':
-            $textoMensaje = 'Error al guardar la nueva contraseña en la base de datos.';
-            break;
-        case 'error_pass_mismatch':
-            $textoMensaje = 'Las contraseñas no coinciden o están vacías. Inténtalo de nuevo.';
-            break;
-        default:
-            $textoMensaje = 'Ha ocurrido un error desconocido.';
-            break;
-    }
-}
-
-// --- Acceso a los datos del usuario ---
+$mensaje =  $data['mensaje'] ?? '';
+$textoMensaje = ProfileMessageHelper::getText($mensaje);
+$claseAlerta = ProfileMessageHelper::getClaseAlerta($mensaje);
 $usuario = $data['usuario'];
+
 ?>
 
-<!-- Este contenido se insertará dentro del <main class="container py-4"> de tu layout -->
 
 <!-- Título de Bienvenida -->
 <div class="mb-4">
@@ -48,10 +21,11 @@ $usuario = $data['usuario'];
 
 <!-- Contenedor de Alerta (si existe) -->
 <?php if ($textoMensaje): ?>
-    <div class="alert <?php echo $claseAlerta; ?> shadow-sm" role="alert">
+    <div id="tempralAlert" class="alert <?php echo $claseAlerta; ?> shadow-sm" role="alert">
         <?php echo $textoMensaje; ?>
     </div>
 <?php endif; ?>
+
 
 <!-- Contenedor principal con dos columnas de Bootstrap -->
 <div class="row g-4">
@@ -155,3 +129,23 @@ $usuario = $data['usuario'];
         </div>
     </div>
 </div>
+
+<!-- JS -->
+<?php if ($textoMensaje): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const alertElement = document.getElementById('tempralAlert');
+            
+            if (alertElement) {
+                setTimeout(() => {
+                    alertElement.style.opacity = '0'; 
+                    alertElement.style.transition = 'opacity 0.5s ease-out';
+                    setTimeout(() => {
+                        alertElement.remove();
+                    }, 500); 
+                    
+                }, 2000);
+            }
+        });
+    </script>
+<?php endif; ?>
