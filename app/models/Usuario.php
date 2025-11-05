@@ -2,20 +2,10 @@
 
 namespace App\Models;
 
+use App\Core\Model;
 
-class Usuario
+class Usuario extends Model
 {
-    /**
-     * constructor
-     */
-    private $db;
-
-    public function __construct($db_connection)
-    {
-        // Creamos la conexión a la base de datos 
-        $this->db = $db_connection;
-    }
-
     /**
      * función para registrar usuario
      */
