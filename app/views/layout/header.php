@@ -17,7 +17,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
             <div class="container-fluid">
-                <a class="navbar-brand fw-bold" href="<?php echo APP_URL; ?>/home">Isla Transfers</a>
+                <a class="text-light navbar-brand fw-bold" href="<?php echo APP_URL; ?>/home">Isla Transfers</a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,7 +33,7 @@
                     <!-- 1. MENÚ IZQUIERDA: con 'me-auto' -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="<?php echo APP_URL; ?>/home">Inicio</a>
+                            <a class="text-light nav-link active" href="<?php echo APP_URL; ?>/home">Inicio</a>
                         </li>
                     </ul>
 
@@ -54,7 +54,7 @@
                                     <div class="user-avatar me-2">
                                         <?php echo $firstLetterSafe; ?>
                                     </div>
-                                    <span class="d-none d-lg-inline">
+                                    <span class="text-light d-none d-lg-inline">
                                         Hola, <?php echo htmlspecialchars($userName); ?>
                                     </span>
                                 </a>
@@ -65,11 +65,15 @@
                                     <?php
                                     // Asume que guardas el rol en la sesión.
                                     if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
                                         <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/admin/dashboard">Admin</a></li>
                                     <?php endif; ?>
 
-                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
                                     <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/auth/logout">Cerrar Sesión</a></li>
                                 </ul>
                             </li>
@@ -78,10 +82,10 @@
                         <?php else: ?>
                             <!-- Links para usuario no logueado -->
                             <li class="nav-item">
-                                <a class="nav-link" href="<?php echo APP_URL; ?>/auth/login">Login</a>
+                                <a class="text-light nav-link" href="<?php echo APP_URL; ?>/auth/login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="<?php echo APP_URL; ?>/auth/register">Registro</a>
+                                <a class="text-light nav-link" href="<?php echo APP_URL; ?>/auth/register">Registro</a>
                             </li>
                         <?php endif; ?>
                     </ul>

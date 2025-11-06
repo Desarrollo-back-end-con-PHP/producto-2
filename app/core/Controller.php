@@ -6,7 +6,7 @@ class Controller
 {
     public function __construct() {}
 
-    protected function loadView($viewName, $data = [])
+    public function loadView($viewName, $data = [])
     {
         extract($data);
 
