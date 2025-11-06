@@ -28,7 +28,6 @@ INSERT INTO `transfer_zona` (`descripcion`) VALUES
 
 -- DATOS PARA 'transfer_viajeros'
 INSERT INTO `transfer_viajeros` (`nombre`, `apellido1`, `apellido2`, `direccion`, `codigoPostal`, `ciudad`, `pais`, `email`, `password`) VALUES
-('Admin', 'Isla', 'Transfers', 'Calle Ficticia 123', '07001', 'Palma', 'España', 'admin@islatransfers.com', '$2y$10$fA.5.kNpXssx2y/30xJYAeK.E5.i6k/1m5.p.C.1iW2U12a.Y.O'),
 ('Ana', 'García', 'Pérez', 'Avenida Principal 45', '07005', 'Palma', 'España', 'ana.garcia@email.com', '$2y$10$Y9g/4.aP.j/b.n.i.k.M.t.g.h.A.X.I.E.b.L.O.B.N'),
 ('Carlos', 'Ruiz', 'Martínez', 'Paseo Marítimo 10', '07600', 'El Arenal', 'España', 'carlos.ruiz@email.com', '$2y$10$Y9g/4.aP.j/b.n.i.k.M.t.g.h.A.X.I.E.b.L.O.B.N'),
 ('Laura', 'Schmidt', 'Müller', 'Hauptstrasse 15', '10115', 'Berlín', 'Alemania', 'laura.schmidt@email.de', '$2y$10$Y9g/4.aP.j/b.n.i.k.M.t.g.h.A.X.I.E.b.L.O.B.N');

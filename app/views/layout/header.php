@@ -58,13 +58,14 @@
                                         Hola, <?php echo htmlspecialchars($userName); ?>
                                     </span>
                                 </a>
+                                <!-- DROPDOWN -->
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
                                     <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/usuario/mostrarPerfil">Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/reservas/misReservas">Mis Reservas</a></li>
+                                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/reserva/misReservas">Mis Reservas</a></li>
 
                                     <?php
-                                    // Asume que guardas el rol en la sesión.
-                                    if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                                    // --- Opciónes Admin ---
+                                    if (isset($_SESSION['user_email']) && $_SESSION['user_email'] === 'admin@islatransfers.com'): ?>
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
@@ -95,6 +96,8 @@
             </div> <!-- Fin .container-fluid -->
         </nav>
     </header>
+
+
 
     <main class="container py-4">
         <!-- El resto de tu página va aquí -->

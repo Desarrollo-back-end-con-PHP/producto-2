@@ -131,3 +131,12 @@ docker-compose down -v
 ```bash
 docker-compose up -d --build
 ```
+
+
+
+# Usuario Admin:
+para poder usar el usuario admin, hay que crearlo:
+```bash
+admin@islatransfers.com
+admin
+```
