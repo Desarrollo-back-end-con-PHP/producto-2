@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-class Reserva
+use App\Core\Model;
+class Reserva extends Model
 {
-    private $db;
 
     // recibe la conexión que le pasa el controlador
-    public function __construct($db_connection)
+    public function __construct()
     {
-        //guarda la conexión
-        $this->db = $db_connection;
-    }
+        parent::__construct();}
 
     /**
      * Obtener todas las reservas asociadas a un usuario particular

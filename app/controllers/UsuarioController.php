@@ -19,13 +19,10 @@ class UsuarioController extends Controller
         parent::__construct();
 
         //si el usuario NO esta logeado se redirige al login.
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/auth/login');
-            exit;
-        }
+        $this->requiereLoginGuard();
 
         // Inicializamos el modelo para acceder a las funciones de base de datos.
-        $this->userModel = new Usuario($this->db);
+        $this->userModel = new Usuario();
     }
 
     /**
