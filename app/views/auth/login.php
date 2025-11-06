@@ -83,7 +83,7 @@ if (isset($_GET['success'])) {
 
             <div class="card-footer text-center py-3">
                 <div class="small">
-                    <a href="<?php echo APP_URL; ?>/registro">¿No tienes cuenta? Regístrate aquí</a>
+                    <a href="<?php echo APP_URL; ?>/auth/register">¿No tienes cuenta? Regístrate aquí</a>
                 </div>
             </div>
 

@@ -24,3 +24,42 @@ main {
 
 
 
+/*  */
+/* --- Avatar de Usuario para Navbar --- */
+
+.user-avatar {
+    width: 32px;            /* Ancho del círculo */
+    height: 32px;           /* Alto del círculo */
+    border-radius: 50%;   /* Lo hace 100% redondo */
+    
+    /* Color de fondo y de la letra */
+    background-color: #0d6efd; /* Azul primario de Bootstrap */
+    color: #ffffff;         /* Letra blanca */
+    
+    /* Para centrar la inicial perfectamente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    font-weight: bold;
+    font-size: 0.9rem;      /* Tamaño de la letra */
+}
+
+/* Ajuste para que el texto "Hola, Pol" (que ahora está dentro 
+   del .nav-link) tenga el color correcto.
+   ¡Es posible que no necesites esto si tu CSS ya lo maneja!
+*/
+.navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+}
+
+/* Asegura que el menú desplegable se alinee a la derecha 
+   en pantallas de escritorio.
+*/
+@media (min-width: 992px) {
+    .navbar-nav .dropdown-menu-end {
+        right: 0;
+        left: auto;
+    }
+}

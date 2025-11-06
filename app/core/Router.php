@@ -2,19 +2,21 @@
 
 namespace App\Core;
 
+use App\Core\Controller;
+
 /**
  * Clase Router
  * Analiza la URL y carga el controlador y método correspondientes.
  */
 class Router
 {
+    public function __construct() {}
+
     /**
      * Método principal que "despacha" la ruta.
      */
     public static function dispatch()
     {
-        // --- LÓGICA DEL ROUTER ---
-        // (Esta es la lógica que tú proporcionaste, ahora encapsulada)
 
         $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'home/index';
 
@@ -25,13 +27,10 @@ class Router
 
         $urlParts = explode('/', filter_var($url, FILTER_SANITIZE_URL));
 
-        // Por defecto, apuntamos al namespace de controladores WEB
         $baseNamespace = 'App\\Controllers\\';
 
         // *** LÓGICA DE API ***
-        // Comprueba si la primera parte de la URL es 'api'
         if (!empty($urlParts[0]) && $urlParts[0] === 'api') {
-            // Es una petición API, cambia el namespace base
             $baseNamespace = 'App\\Controllers\\Api\\';
             array_shift($urlParts); // Quita 'api' de la URL
         }
@@ -62,12 +61,35 @@ class Router
                 // Llama al método y pasa los parámetros restantes
                 call_user_func_array([$controller, $methodName], $params);
             } else {
+                // --- INICIO DE CORRECCIÓN (Método no encontrado) ---
+                // Preparamos el mensaje de error
+                $errorMessage = 'El método "' . $methodName . '" no existe en la clase "' . $fqcn . '".';
+
+                // Enviamos el código de estado HTTP 404
                 http_response_code(404);
-                die('Error 404: El método "' . $methodName . '" no existe en la clase "' . $fqcn . '".');
+
+                // Cargamos nuestra vista 404 personalizada
+                $controller = new Controller();
+                $controller->loadView('errors/404', ['errorMessage' => $errorMessage]);
+
+                // Detenemos la ejecución
+                exit;
+                // --- FIN DE CORRECCIÓN ---
             }
         } else {
+            // --- INICIO DE CORRECCIÓN (Controlador no encontrado) ---
+            // Preparamos el mensaje de error
+            $errorMessage = 'La clase controladora "' . $fqcn . '" no fue encontrada.';
+
+            // Enviamos el código de estado HTTP 404
             http_response_code(404);
-            die('Error 404: La clase controladora "' . $fqcn . '" no fue encontrada.');
+
+            // Cargamos nuestra vista 404 personalizada
+            $controller = new Controller();
+            $controller->loadView('errors/404', ['errorMessage' => $errorMessage]);
+            // Detenemos la ejecución
+            exit;
+            // --- FIN DE CORRECCIÓN ---
         }
     }
 }
