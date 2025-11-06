@@ -119,3 +119,15 @@ Para regenerar el Auto Loader después de añadir un controlador:
 ```bash
 composer dump-autoload
 ```
+
+
+# Resetear los Contenedores
+## 1. Destruir Contenedores
+```bash
+docker-compose down -v
+```
+
+## 2. Volver a Crear
+```bash
+docker-compose up -d --build
+```

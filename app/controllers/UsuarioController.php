@@ -14,11 +14,12 @@ class UsuarioController extends Controller
     public function __construct()
     {
         parent::__construct();
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/auth/login');
-            exit;
-        }
-        $this->userModel = new Usuario(); 
+
+        //si el usuario NO esta logeado se redirige al login.
+        $this->requiereLoginGuard();
+
+        // Inicializamos el modelo para acceder a las funciones de base de datos.
+        $this->userModel = new Usuario();
     }
 
     public function mostrarPerfil()

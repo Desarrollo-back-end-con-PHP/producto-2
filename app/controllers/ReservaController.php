@@ -15,12 +15,8 @@ class ReservaController extends Controller
         parent::__construct();
 
         //si el usuario NO esta logeado se redirige al login.
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: ' . APP_URL . '/auth/login');
-            exit;
-        }
-
-        $this->reservaModel = new Reserva($this->db);
+        $this->requiereLoginGuard();
+        $this->reservaModel = new Reserva();
     }
 
     /**
@@ -53,7 +49,7 @@ class ReservaController extends Controller
         // $hoteles = $this->hotelModel->obtenerHoteles();
 
         // Carga el formulario de la vista
-        $this->loadView('reservas/crear_reserva_view', [
+        $this->loadView('reservas/crear_reserva', [
             // 'hoteles' => $hoteles
         ]);
     }
