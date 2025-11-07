@@ -10,8 +10,6 @@ $usuario = $data['usuario'];
 ?>
 
 
-<!-- Título de Bienvenida -->
-<!-- Título de Bienvenida con botón a Mis Reservas -->
 <div class="mb-4 d-flex align-items-center justify-content-between">
     <div>
         <h1>Mi Perfil</h1>
@@ -19,16 +17,6 @@ $usuario = $data['usuario'];
             Hola, <strong class="fw-semibold text-dark"><?php echo htmlspecialchars($usuario['nombre']); ?></strong>.
             Aquí puedes gestionar tu información personal y tu contraseña.
         </p>
-    </div>
-
-    <!-- Botón a Mis Reservas -->
-    <div>
-        <a href="<?php echo APP_URL; ?>/perfil/listarReservas" class="btn btn-primary btn-lg">
-            Mis Reservas
-        </a>
-    </div>
-</div>
-
 
 <!-- Contenedor de Alerta (si existe) -->
 <?php if ($textoMensaje): ?>
