@@ -24,7 +24,7 @@ $mensaje = $data['mensaje'] ?? null;
 <div class="card shadow-sm border">
     <div class="card-body p-4">
         
-        <form action="<?php echo APP_URL; ?>/reserva/crearReserva" method="POST" id="formReserva">
+        <form action="<?php echo APP_URL; ?>/reserva/crearReservaPost" method="POST" id="formReserva">
 
             <!-- Fila 1: Tipo de Reserva y Destino -->
             <div class="row g-3 mb-3">

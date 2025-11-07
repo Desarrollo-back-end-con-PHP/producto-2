@@ -137,4 +137,6 @@ class Usuario extends Model
 
         return $stmt->execute();
     }
+
+
 }
