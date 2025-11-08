@@ -112,4 +112,22 @@ public function getTodasReservas()
 
     return $stmt->execute();
 }
+
+public function getReservasAdminIds()
+{
+    $sql = "SELECT id_reserva FROM reserva_admin";
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+
+    // Usando mysqli
+    $result = $stmt->get_result();
+    $ids = [];
+    while ($row = $result->fetch_assoc()) {
+        $ids[] = $row['id_reserva'];
+    }
+
+    return $ids;
+}
+
+
 }

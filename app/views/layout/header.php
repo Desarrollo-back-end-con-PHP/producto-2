@@ -61,7 +61,7 @@
                                 <!-- DROPDOWN -->
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
                                     <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/usuario/mostrarPerfil">Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/reserva/misReservas">Mis Reservas</a></li>
+                                    <li><a class="dropdown-item" href="<?php echo APP_URL; ?>/Reserva/listarReservas">Mis Reservas</a></li>
 
                                     <?php
                                     // --- Opciónes Admin ---
