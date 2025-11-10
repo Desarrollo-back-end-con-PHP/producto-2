@@ -67,7 +67,7 @@ class ReservaController extends Controller
     /**
      * Procesar el formulario y crear la reserva
      */
-    public function crearReservaPost()
+    public function crearReservaPost() //POST
     {
         $this->requireMethod('POST');
 
@@ -99,9 +99,9 @@ class ReservaController extends Controller
         );
 
         if ($exito) {
-            $_SESSION['mensaje_exito'] = ProfileMessageHelper::EXITO_RESERVA;
-            $this->listarReservas();
-            return;
+            $_SESSION['mensaje_exito'] = ProfileMessageHelper::EXITO_RESERVA; //Separar responsabilidades
+            header("Location: " . APP_URL . "/reserva/misreservas");
+            exit;
         } else {
             // Enviar mensaje de error a la vista
             $trayectos = $this->trayectoModel->getAllTrayectos();
@@ -114,51 +114,128 @@ class ReservaController extends Controller
         }
     }
 
-   public function listarReservas()
-{
-    $user_email = $_SESSION['user_email'];
-    $user_id    = $_SESSION['user_id'];
-
-    $reservas = $this->reservaModel->getReservasPorEmail($user_email);
-
-    $reservasAdmin = $this->reservaModel->getReservasAdminIds(); 
-
-    $reservasAdminMap = array_flip($reservasAdmin); 
-  
-    $hoteles = $this->hotelModel->getAll();
-    $hotelesMap = [];
-    foreach ($hoteles as $hotel) {
-        $hotelesMap[$hotel['id_hotel']] = $hotel['usuario'];
-    }
-
-    $this->loadView('user/mis_reservas', [
-        'reservas' => $reservas,
-        'hotelesMap' => $hotelesMap,
-        'user_id' => $user_id,
-        'reservasAdminMap' => $reservasAdminMap
-    ]);
-
+    public function misreservas()
+    {
+        $user_email = $_SESSION['user_email'];
+        $user_id    = $_SESSION['user_id'];
 
         if ($user_email === 'admin@islatransfers.com') {
-            $reservas = $this->reservaModel->getTodasReservas(); //adicionar las fucnionalidades extras de admim
+            $reservas = $this->reservaModel->getTodasReservas();
         } else {
             $reservas = $this->reservaModel->getReservasPorEmail($user_email);
         }
 
-        // Obtener hoteles para traducir id_destino a nombre
         $hoteles = $this->hotelModel->getAll();
         $hotelesMap = [];
         foreach ($hoteles as $hotel) {
             $hotelesMap[$hotel['id_hotel']] = $hotel['usuario'];
         }
 
+
+        $reservasAdmin = $this->reservaModel->getReservasAdminIds();
+        $reservasAdminMap = array_flip($reservasAdmin);
+
+        // Cargamos la vista con TODOS los datos
         $this->loadView('user/mis_reservas', [
-            'reservas'   => $reservas,
-            'hotelesMap' => $hotelesMap,
-            'user_id'    => $user_id
+            'reservas'         => $reservas,
+            'hotelesMap'       => $hotelesMap,
+            'user_id'          => $user_id,
+            'reservasAdminMap' => $reservasAdminMap
         ]);
     }
+
+    public function editar($id_reserva) //GET
+    {
+        //se usa el modelo para obtener los datos de la reserva
+        $reserva = $this->reservaModel->getReservaPorId($id_reserva);
+
+        //comprueba que es admin o es el dueño de la reserva
+        if (!$reserva) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_existe");
+            exit;
+        }
+        $esAdmin = $this->isAdminLoggedIn();
+        $esDueño = ($reserva['email_cliente'] === $_SESSION['user_email']);
+
+        if (!$esAdmin && !$esDueño) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_autorizado");
+            exit;
+        }
+
+        // se obtienen los datos
+        $hoteles = $this->hotelModel->getAll();
+        $trayectos = $this->trayectoModel->getAllTrayectos();
+
+        //se carga la vista dle formulario de edición
+        $this->loadView('reservas/editar_reserva', [
+            'reserva' => $reserva,
+            'hoteles' => $hoteles,
+            'trayectos' => $trayectos,
+            'mensaje' => $_GET['mensaje'] ?? null
+        ]);
+    }
+
+    public function editarPost($id_reserva) //POST
+    {
+
+        //los datos llegan por POST
+        $this->requireMethod('POST');
+
+        $reserva = $this->reservaModel->getReservaPorId($id_reserva);
+
+        $esAdmin = $this->isAdminLoggedIn();
+        $esDueño = ($reserva && $reserva['email_cliente'] === $_SESSION['user_email']);
+
+        if (!$esAdmin && !$esDueño) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_autorizado");
+            exit;
+        }
+
+        //recoge los datos del formulario
+        $datos = $_POST;
+        //se llama al metodo actualizarReserva del modelo para actualizar la base de datos
+        $exito = $this->reservaModel->actualizarReserva($id_reserva, $datos);
+
+        if ($exito) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=actualizado_ok");
+            exit;
+        } else {
+            header("Location: " . APP_URL . "/reserva/editar/" . $id_reserva . "?mensaje=error_actualizar");
+            exit;
+        }
+    }
+
+    public function cancelar($id_reserva) // POST
+    {
+        $this->requireMethod('POST');
+
+        //se obtinee la reserva
+        $reserva = $this->reservaModel->getReservaPorId($id_reserva);
+
+        //comprobamos si la reserva existe
+        if (!$reserva) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_existe");
+            exit;
+        }
+
+        //comprobar los permisos
+        $esAdmin = $this->isAdminLoggedIn();
+        $esDueño = ($reserva && $reserva['email_cliente'] === $_SESSION['user_email']);
+
+        if (!$esAdmin && !$esDueño) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_autorizado");
+            exit;
+        }
+
+        //se llama al método cancelar de Reserva
+        $exito = $this->reservaModel->cancelarReserva($id_reserva);
+
+        if ($exito) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=cancelado_ok");
+            exit;
+        } else {
+            header("Location: " . APP_URL . "/reserva/editar/" . $id_reserva . "?mensaje=error_cancelar");
+            exit;
+        }
+    }
 }
-
-
-

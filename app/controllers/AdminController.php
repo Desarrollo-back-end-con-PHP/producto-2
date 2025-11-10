@@ -16,6 +16,8 @@ class AdminController extends Controller
 
         $this->requiereLoginGuard();
 
+        $this->requiereAdminGuard(); //Comprueba que el usuario logeado es el admin (con correo admin@islatransfers.com)
+
         $this->userModel = new Usuario();
     }
 
