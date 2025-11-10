@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Helpers\ProfileMessageHelper;
 use App\Models\Reserva;
 use App\Models\Trayecto;
 use App\Models\Hotel;
@@ -98,7 +99,8 @@ class ReservaController extends Controller
         );
 
         if ($exito) {
-            header("Location: " . APP_URL . "/reserva/misreservas");
+            $_SESSION['mensaje_exito'] = ProfileMessageHelper::EXITO_RESERVA;
+            header("Location: " . APP_URL . "/perfil/listarReservas");
             exit;
         } else {
             // Enviar mensaje de error a la vista
@@ -112,28 +114,33 @@ class ReservaController extends Controller
         }
     }
 
-    public function misreservas() // renombrado para que coincida con la vista antes listarReservas
+    public function misreservas()
     {
         $user_email = $_SESSION['user_email'];
         $user_id    = $_SESSION['user_id'];
 
         if ($user_email === 'admin@islatransfers.com') {
-            $reservas = $this->reservaModel->getTodasReservas(); //adicionar las fucnionalidades extras de admim
+            $reservas = $this->reservaModel->getTodasReservas();
         } else {
             $reservas = $this->reservaModel->getReservasPorEmail($user_email);
         }
 
-        // Obtener hoteles para traducir id_destino a nombre
         $hoteles = $this->hotelModel->getAll();
         $hotelesMap = [];
         foreach ($hoteles as $hotel) {
             $hotelesMap[$hotel['id_hotel']] = $hotel['usuario'];
         }
 
+
+        $reservasAdmin = $this->reservaModel->getReservasAdminIds();
+        $reservasAdminMap = array_flip($reservasAdmin);
+
+        // Cargamos la vista con TODOS los datos
         $this->loadView('user/mis_reservas', [
-            'reservas'   => $reservas,
-            'hotelesMap' => $hotelesMap,
-            'user_id'    => $user_id
+            'reservas'         => $reservas,
+            'hotelesMap'       => $hotelesMap,
+            'user_id'          => $user_id,
+            'reservasAdminMap' => $reservasAdminMap
         ]);
     }
 

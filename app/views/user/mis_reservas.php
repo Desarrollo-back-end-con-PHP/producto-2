@@ -38,7 +38,7 @@ $user_id    = $data['user_id'] ?? 0;
                         <!-- Creado por -->
                         <p>
                             <strong>Creado por:</strong>
-                            <?= ($reserva['email_cliente'] === 'admin@islatransfers.com') ? 'Admin' : 'Usuario' ?>
+                            <?= isset($data['reservasAdminMap'][$reserva['id_reserva']]) ? 'Administrador' : 'Usuario' ?>
                         </p>
 
                         <!-- Detalles de llegada -->
