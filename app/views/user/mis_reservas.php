@@ -65,9 +65,13 @@ $user_id    = $data['user_id'] ?? 0;
                             <a href="<?php echo APP_URL; ?>/reserva/editar/<?php echo $reserva['id_reserva']; ?>" class="btn btn-primary btn-sm">
                                 Editar
                             </a>
-                            <a href="<?php echo APP_URL; ?>/reserva/cancelar/<?php echo $reserva['id_reserva']; ?>" class="btn btn-danger btn-sm">
-                                Cancelar
-                            </a>
+                            <form action="<?php echo APP_URL; ?>/reserva/cancelar/<?php echo $reserva['id_reserva']; ?>" method="POST" style="display: inline;">
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Estás seguro de que quieres cancelar esta reserva?');">
+                                    Cancelar
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

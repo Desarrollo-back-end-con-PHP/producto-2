@@ -19,7 +19,7 @@ class Reserva extends Model
      */
     public function getReservasPorEmail($email)
     {
-        $sql = "SELECT * FROM transfer_reservas WHERE email_cliente = ?";
+        $sql = "SELECT * FROM transfer_reservas WHERE email_cliente = ? AND status !='cancelada'"; //Se modifica para no mostrar las canceladas (eliminadas)
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -29,7 +29,7 @@ class Reserva extends Model
 
     public function getTodasReservas()
     {
-        $sql = "SELECT * FROM transfer_reservas ORDER BY fecha_reserva DESC";
+        $sql = "SELECT * FROM transfer_reservas WHERE status !='cancelada' ORDER BY fecha_reserva DESC"; //Se modifica para no mostrar las canceladas (eliminadas)
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -227,5 +227,23 @@ class Reserva extends Model
         }
 
         return $ids;
+    }
+
+    public function cancelarReserva($id_reserva)
+    {
+        $nuevo_estado = 'cancelada';
+        $fecha_actual = date("Y-m-d H:i:s"); //se actualiza la fecha de modificación
+
+        $sql = "UPDATE transfer_reservas SET status = ?, fecha_modificacion = ? WHERE id_reserva = ?"; //Se hace soft delete con update y no con delete
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("Error al preparar la consulta de cancelar resrva: " . $this->db->error);
+            return false;
+        }
+
+        //se vinculan los parametros
+        $stmt->bind_param("ssi", $nuevo_estado, $fecha_actual, $id_reserva);
+        return $stmt->execute();
     }
 }

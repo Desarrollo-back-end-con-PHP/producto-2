@@ -42,7 +42,7 @@ class ReservaController extends Controller
         $trayectos = $this->trayectoModel->getAllTrayectos();
 
         // Cargamos la vista con todos los datos necesarios
-        $this->loadView('reserva/crear_reserva', [
+        $this->loadView('reservas/crear_reserva', [
             'reservas' => $reservas,
             'hoteles' => $hoteles,
             'trayectos' => $trayectos,
@@ -58,7 +58,7 @@ class ReservaController extends Controller
         $trayectos = $this->trayectoModel->getAllTrayectos();
         $hoteles = $this->hotelModel->getAll();
 
-        $this->loadView('reserva/crear_reserva', [
+        $this->loadView('reservas/crear_reserva', [
             'trayectos' => $trayectos,
             'hoteles' => $hoteles
         ]);
@@ -99,8 +99,8 @@ class ReservaController extends Controller
         );
 
         if ($exito) {
-            $_SESSION['mensaje_exito'] = ProfileMessageHelper::EXITO_RESERVA;
-            header("Location: " . APP_URL . "/perfil/listarReservas");
+            $_SESSION['mensaje_exito'] = ProfileMessageHelper::EXITO_RESERVA; //Separar responsabilidades
+            header("Location: " . APP_URL . "/reserva/misreservas");
             exit;
         } else {
             // Enviar mensaje de error a la vista
@@ -201,6 +201,40 @@ class ReservaController extends Controller
             exit;
         } else {
             header("Location: " . APP_URL . "/reserva/editar/" . $id_reserva . "?mensaje=error_actualizar");
+            exit;
+        }
+    }
+
+    public function cancelar($id_reserva)
+    {
+        $this->requireMethod('POST');
+
+        //se obtinee la reserva
+        $reserva = $this->reservaModel->getReservaPorId($id_reserva);
+
+        //comprobamos si la reserva existe
+        if (!$reserva) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_existe");
+            exit;
+        }
+
+        //comprobar los permisos
+        $esAdmin = $this->isAdminLoggedIn();
+        $esDueño = ($reserva && $reserva['email_cliente'] === $_SESSION['user_email']);
+
+        if (!$esAdmin && !$esDueño) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=no_autorizado");
+            exit;
+        }
+
+        //se llama al método cancelar de Reserva
+        $exito = $this->reservaModel->cancelarReserva($id_reserva);
+
+        if ($exito) {
+            header("Location: " . APP_URL . "/reserva/misreservas?mensaje=cancelado_ok");
+            exit;
+        } else {
+            header("Location: " . APP_URL . "/reserva/editar/" . $id_reserva . "?mensaje=error_cancelar");
             exit;
         }
     }
