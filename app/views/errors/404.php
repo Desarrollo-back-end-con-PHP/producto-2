@@ -44,7 +44,7 @@ $title = "Página no encontrada (404)";
 <!-- Script para la cuenta atrás y redirección -->
 <script>
     (function() {
-        let seconds = 5; // Inicia el contador en 5
+        let seconds = 10; // Inicia el contador en 5
         const countdownElement = document.getElementById('countdown');
         const countdownMessage = document.getElementById('countdown-message');
         

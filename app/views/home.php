@@ -6,7 +6,7 @@
         <p class="fs-5 text-muted">
             <?php echo isset($description) ? $description : 'Tu servicio de traslados de confianza.'; ?>
         </p>
-        <a href="<?php echo APP_URL; ?>/registro" class="btn btn-primary btn-lg">¡Reserva ahora!</a>
+        <a href="<?php echo APP_URL; ?>/reserva" class="btn btn-primary btn-lg">¡Reserva ahora!</a>
     </div>
 </div>
 

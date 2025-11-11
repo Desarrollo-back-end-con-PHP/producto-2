@@ -10,14 +10,13 @@ $usuario = $data['usuario'];
 ?>
 
 
-<!-- Título de Bienvenida -->
-<div class="mb-4">
-    <h1>Mi Perfil</h1>
-    <p class="fs-5 text-muted">
-        Hola, <strong class="fw-semibold text-dark"><?php echo htmlspecialchars($usuario['nombre']); ?></strong>.
-        Aquí puedes gestionar tu información personal y tu contraseña.
-    </p>
-</div>
+<div class="mb-4 d-flex align-items-center justify-content-between">
+    <div>
+        <h1>Mi Perfil</h1>
+        <p class="fs-5 text-muted">
+            Hola, <strong class="fw-semibold text-dark"><?php echo htmlspecialchars($usuario['nombre']); ?></strong>.
+            Aquí puedes gestionar tu información personal y tu contraseña.
+        </p>
 
 <!-- Contenedor de Alerta (si existe) -->
 <?php if ($textoMensaje): ?>

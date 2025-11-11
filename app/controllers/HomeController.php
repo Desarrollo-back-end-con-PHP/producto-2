@@ -13,9 +13,20 @@ class HomeController extends Controller
         parent::__construct();
     }
 
+    public function test()
+	{
+        $this->requireMethod('POST');
+
+		// Simplemente imprime un mensaje para confirmar que se ha accedido
+		//echo "Endpoint funcionando";-->
+		
+		// Opcionalmente, si quisieras devolver un JSON:
+		 header('Content-Type: application/json');
+		 echo json_encode(['status' => 'success', 'message' => 'Endpoint funcionando']);
+	}
+
     public function index()
     {
-
         $data = [
             'title' => 'Bienvenido a Isla Transfers',
             'description' => 'Tu servicio de traslados en la isla. Aquí puedes presentar la aplicación, sus características y funcionamiento.'

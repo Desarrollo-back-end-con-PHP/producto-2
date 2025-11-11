@@ -1,5 +1,4 @@
 <?php
-
 // Inicia la sesión para toda la aplicación
 session_start();
 
