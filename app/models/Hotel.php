@@ -18,7 +18,7 @@ class Hotel extends Model
      */
     public function getAll()
     {
-        $sql = "SELECT id_hotel, usuario, id_zona FROM tranfer_hotel ORDER BY usuario ASC";
+        $sql = "SELECT id_hotel, usuario, id_zona FROM tranfer_hotel WHERE status = 'activo' ORDER BY usuario ASC";
 
         $stmt = $this->db->prepare($sql);
 
@@ -79,5 +79,62 @@ class Hotel extends Model
             error_log("Error al crear hotel: " . $e->getMessage());
             return false;
         }
+    }
+
+    public function actualizarHotel($id_hotel, $datos)
+    {
+        $nombre_usuario = $datos['usuario'] ?? null;
+        $comision = $datos['comision'] ?? 0;
+        $password = $datos['password'] ?? null;
+
+        $sql_parts = [
+            'usuario = ?',
+            'Comision = ?'
+        ];
+        $params = [$nombre_usuario, $comision];
+        $types = 'sd';
+
+        // Solo añadimos la contraseña si no está vacía
+        if (!empty($password)) {
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            $sql_parts[] = 'password = ?';
+            $params[] = $password_hash;
+            $types .= 's';
+        }
+
+        $params[] = $id_hotel;
+        $types .= 'i';
+
+        $sql = "UPDATE tranfer_hotel SET " . implode(', ', $sql_parts) . " WHERE id_hotel = ?";
+
+        $stmt = $this->db->prepare($sql);
+        if ($stmt === false) {
+            error_log("Error al preparar (actualizar hotel): " . $this->db->error);
+            return false;
+        }
+
+        $stmt->bind_param($types, ...$params);
+
+        try {
+            return $stmt->execute();
+        } catch (\mysqli_sql_exception $e) {
+            error_log("Error al actualizar hotel: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function eliminarHotel($id_hotel)
+    {
+
+        $sql = "UPDATE tranfer_hotel SET status = 'inactivo' WHERE id_hotel = ?";
+
+        $stmt = $this->db->prepare($sql);
+        if ($stmt === false) {
+            error_log("Error al preparar la eliminación del hotel: " . $this->db->error);
+            return false;
+        }
+
+        $stmt->bind_param("i", $id_hotel);
+        return $stmt->execute();
     }
 }

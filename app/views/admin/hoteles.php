@@ -59,9 +59,25 @@ $titulo = $data['titulo'] ?? 'Gestión de Hoteles';
                                     <tr>
                                         <td><?php echo htmlspecialchars($hotel['id_hotel']); ?></td>
                                         <td><?php echo htmlspecialchars($hotel['usuario']); ?></td>
+
                                         <td>
-                                            <a href="#" class="btn btn-sm btn-warning" title="Editar"><i class="bi bi-pencil"></i></a>
-                                            <a href="#" class="btn btn-sm btn-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                                            <a href="<?php echo APP_URL; ?>/admin/editarHotel/<?php echo $hotel['id_hotel']; ?>"
+                                                class="btn btn-sm btn-warning"
+                                                title="Editar">
+                                                <i class="bi bi-pencil"></i>Editar
+                                            </a>
+
+                                            <form action="<?php echo APP_URL; ?>/admin/eliminarHotel/<?php echo $hotel['id_hotel']; ?>"
+                                                method="POST"
+                                                class="d-inline"
+                                                onsubmit="return confirm('¿Estás seguro de que quieres eliminar este hotel?');">
+
+                                                <button type="submit"
+                                                    class="btn btn-sm btn-danger"
+                                                    title="Eliminar">
+                                                    <i class="bi bi-trash"></i>Eliminar
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

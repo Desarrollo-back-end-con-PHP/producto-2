@@ -10,11 +10,17 @@ ADD COLUMN `fecha_creacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP; -- se añade co
 
 
 
--- añade una columna con estado de la reserva
+-- añade una columna con estado de la reserva útil para el soft delete
 ALTER TABLE `transfer_reservas`
 ADD COLUMN `status` ENUM('pendiente', 'confirmada', 'cancelada', 'completada')
 NOT NULL DEFAULT 'pendiente'
 AFTER `id_vehiculo`;
+
+-- añade una conlumna con estado del hotel útil para el soft delete
+ALTER TABLE `tranfer_hotel`
+ADD COLUMN `status` ENUM('activo', 'inactivo') 
+NOT NULL DEFAULT 'activo' 
+AFTER `password`;
 
 -- creacion de una tabla reservas de administrador para registrar que reservas fueran creadas por el admim
 CREATE TABLE reserva_admin (
