@@ -19,9 +19,9 @@ class Hotel extends Model
     public function getAll()
     {
         $sql = "SELECT id_hotel, usuario, id_zona FROM tranfer_hotel ORDER BY usuario ASC";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if ($stmt === false) {
             error_log("Error al preparar la consulta de hoteles: " . $this->db->error);
             return false;
@@ -29,7 +29,7 @@ class Hotel extends Model
 
         $stmt->execute();
         $resultado = $stmt->get_result();
-        
+
         // Devolvemos todos los resultados como un array asociativo
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
@@ -42,21 +42,42 @@ class Hotel extends Model
     public function getById(int $id_hotel)
     {
         $sql = "SELECT id_hotel, usuario, Comision, id_zona FROM tranfer_hotel WHERE id_hotel = ?";
-        
+
         $stmt = $this->db->prepare($sql);
-        
+
         if ($stmt === false) {
             error_log("Error al preparar la consulta de hotel por ID: " . $this->db->error);
             return false;
         }
-        
+
         $stmt->bind_param("i", $id_hotel);
         $stmt->execute();
-        
+
         $resultado = $stmt->get_result();
-        
+
         // Devolvemos una única fila
         return $resultado->fetch_assoc();
     }
-    
+
+    public function crearHotel($nombre_usuario, $password, $comision)
+    {
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+        $sql_hotel = "INSERT INTO tranfer_hotel (usuario, password, Comision, id_zona) VALUES (?,?,?,NULL)";
+
+        $stmt_hotel = $this->db->prepare($sql_hotel);
+        if ($stmt_hotel === false) {
+            error_log("Error al preparar el hotel: " . $this->db->error);
+            return false;
+        }
+
+        $stmt_hotel->bind_param("ssd", $nombre_usuario, $password_hash, $comision);
+
+        try {
+            return $stmt_hotel->execute();
+        } catch (\mysqli_sql_exception $e) {
+            error_log("Error al crear hotel: " . $e->getMessage());
+            return false;
+        }
+    }
 }
