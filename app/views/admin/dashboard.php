@@ -4,7 +4,7 @@
 
 <!-- Stats Cards Row -->
 <div class="row g-4">
-    
+
     <!-- Card 1: Pending Reservations -->
     <div class="col-md-6 col-lg-4">
         <div class="card text-bg-primary shadow-sm h-100">
@@ -40,6 +40,23 @@
             </div>
         </div>
     </div>
+</div>
+</div>
+</div>
+<!-- Card 4: Hoteles -->
+<div class="col-md-6 col-lg-4">
+    <div class="card text-bg-secondary shadow-sm h-100">
+        <div class="card-body">
+            <h5 class="card-title fs-4">Hoteles Activos</h5>
+
+            <p class="card-text display-4 fw-bold"><?php echo $data['totalHoteles'] ?? 0; ?></p>
+
+            <a href="<?php echo APP_URL; ?>/admin/hoteles" class="stretched-link text-white">Gestionar Hoteles</a>
+        </div>
+    </div>
+</div>
+</div>
+<div class="card shadow-sm border-0 rounded-lg mt-5">
 </div>
 
 <!-- Upcoming Reservations (Table) -->
@@ -83,4 +100,3 @@
         </div>
     </div>
 </div>
-

@@ -261,6 +261,7 @@ public function crearReservaPost() //POST
 
     /** ------------------- METODOS DE LA API ----------------------- */
 
+
     public function crearReservaPostApi() // POST
 {
     header('Content-Type: application/json');
@@ -374,6 +375,7 @@ public function crearReservaPost() //POST
     echo json_encode($response);
     exit;
 }
+
 
 
 
