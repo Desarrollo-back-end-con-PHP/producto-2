@@ -110,6 +110,22 @@ $mensaje = $data['mensaje'] ?? null;
                      <!-- (Según requisitos, aquí iría "hora de recogida", pero el controller espera 'hora_vuelo_salida') -->
                 </div>
             </div>
+            <?php if (isset($_SESSION['user_email']) && $_SESSION['user_email'] === 'admin@islatransfers.com'): ?>
+                <hr class="my-4">
+                <h4 class="h5 text-primary mb-3">Campos del Administrador</h4>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="email_cliente" class="form-label">Email del Cliente</label>
+                        <input type="email" id="email_cliente" name="email_cliente" class="form-control"
+                placeholder="cliente@correo.com" required>
+            </div>
+            <div class="col-md-6">
+            <label for="codigo_admin" class="form-label">Código del Administrador</label>
+            <input type="text" id="codigo_admin" name="codigo_admin" class="form-control"
+                placeholder="Ej: ADM123" required>
+        </div>
+    </div>
+<?php endif; ?>
 
             <!-- Botón de Enviar -->
             <div class="text-end mt-4">

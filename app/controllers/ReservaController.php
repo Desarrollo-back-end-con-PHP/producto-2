@@ -261,7 +261,6 @@ public function crearReservaPost() //POST
 
     /** ------------------- METODOS DE LA API ----------------------- */
 
-
     public function crearReservaPostApi() // POST
 {
     header('Content-Type: application/json');
@@ -294,14 +293,7 @@ public function crearReservaPost() //POST
             ]);
             return;
         }
-    } else {
-        if (!$email_cliente) {
-            echo json_encode([
-                'success' => false,
-                'message' => "Debes iniciar sesión para crear una reserva."
-            ]);
-            return; 
-        }
+    
     }
 
     $exito = $this->reservaModel->crearReserva(
