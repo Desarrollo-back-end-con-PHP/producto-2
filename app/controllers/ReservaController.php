@@ -26,43 +26,20 @@ class ReservaController extends Controller
 
     public function index()
     {
-        // Redirige a mostrarReservas o implementa aquí mismo
-        $this->mostrarReservas();
+        
+        $this->crear();
     }
-    public function mostrarReservas()
-    {
-        // Obtenemos el ID del usuario logueado
-        $id_viajero = $_SESSION['user_id'] ?? 1;
+    
+    public function crear() 
+{
+    $trayectos = $this->trayectoModel->getAllTrayectos();
+    $hoteles = $this->hotelModel->getAll();
 
-        // Obtenemos todas las reservas de este usuario
-        $reservas = $this->reservaModel->getReservasPorEmail($id_viajero);
-
-        // Obtenemos los hoteles y trayectos para llenar el formulario
-        $hoteles = $this->hotelModel->getAll();
-        $trayectos = $this->trayectoModel->getAllTrayectos();
-
-        // Cargamos la vista con todos los datos necesarios
-        $this->loadView('reservas/crear_reserva', [
-            'reservas' => $reservas,
-            'hoteles' => $hoteles,
-            'trayectos' => $trayectos,
-            'mensaje' => $_GET['mensaje'] ?? null,
-        ]);
-    }
-
-    /**
-     * Mostrar el formulario de creación de reserva
-     */
-    public function crear()
-    {
-        $trayectos = $this->trayectoModel->getAllTrayectos();
-        $hoteles = $this->hotelModel->getAll();
-
-        $this->loadView('reservas/crear_reserva', [
-            'trayectos' => $trayectos,
-            'hoteles' => $hoteles
-        ]);
-    }
+    $this->loadView('reservas/crear_reserva', [ 
+        'trayectos' => $trayectos,
+        'hoteles' => $hoteles
+    ]);
+}
 
     /**
      * Procesar el formulario y crear la reserva
@@ -260,6 +237,35 @@ public function crearReservaPost() //POST
 
 
     /** ------------------- METODOS DE LA API ----------------------- */
+public function crearApi() // GET
+{
+    header('Content-Type: application/json');
+    
+    try {
+   
+        $trayectos = $this->trayectoModel->getAllTrayectos();
+        $hoteles = $this->hotelModel->getAll();
+
+
+        http_response_code(200); 
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Datos del formulario obtenidos con éxito.',
+            'data' => [
+                'trayectos' => $trayectos,
+                'hoteles' => $hoteles
+            ]
+        ]);
+        exit;
+
+    } catch (\Exception $e) {
+   
+        http_response_code(500); 
+        echo json_encode(['status' => 'error', 'message' => 'Error interno del servidor al obtener datos.']);
+        exit;
+    }
+}
+
 
     public function crearReservaPostApi() // POST
 {
