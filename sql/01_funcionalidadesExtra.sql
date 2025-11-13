@@ -22,6 +22,12 @@ ADD COLUMN `status` ENUM('activo', 'inactivo')
 NOT NULL DEFAULT 'activo' 
 AFTER `password`;
 
+-- añade una columna con estado del viajero útil para el soft delete
+ALTER TABLE `transfer_viajeros`
+ADD COLUMN `status` ENUM('activo', 'inactivo')
+NOT NULL DEFAULT 'activo'
+AFTER `id_viajero`;
+
 -- creacion de una tabla reservas de administrador para registrar que reservas fueran creadas por el admim
 CREATE TABLE reserva_admin (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,

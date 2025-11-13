@@ -98,36 +98,36 @@ class Usuario extends Model
         return $resultado->fetch_assoc();
     }
 
-    
-  public function actualizarDatosPersonales($id_viajero, $nombre, $apellido1, $apellido2, $direccion, $codigoPostal, $ciudad, $pais, $email)
-{
-    $sql = "UPDATE transfer_viajeros 
+
+    public function actualizarDatosPersonales($id_viajero, $nombre, $apellido1, $apellido2, $direccion, $codigoPostal, $ciudad, $pais, $email)
+    {
+        $sql = "UPDATE transfer_viajeros 
             SET nombre = ?, apellido1 = ?, apellido2 = ?, direccion = ?, codigoPostal = ?, ciudad = ?, pais = ?, email = ?
             WHERE id_viajero = ?";
 
-    $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-    // 8 strings + 1 integer
-    $stmt->bind_param(
-        "ssssssssi",
-        $nombre,
-        $apellido1,
-        $apellido2,
-        $direccion,
-        $codigoPostal,
-        $ciudad,
-        $pais,
-        $email,
-        $id_viajero
-    );
+        // 8 strings + 1 integer
+        $stmt->bind_param(
+            "ssssssssi",
+            $nombre,
+            $apellido1,
+            $apellido2,
+            $direccion,
+            $codigoPostal,
+            $ciudad,
+            $pais,
+            $email,
+            $id_viajero
+        );
 
-    return $stmt->execute();
-}
+        return $stmt->execute();
+    }
 
-   
+
     public function actualizarContrasena($id_viajero, $nuevaContrasena)
     {
-       
+
         $hashContrasena = password_hash($nuevaContrasena, PASSWORD_DEFAULT);
 
         $sql = "UPDATE transfer_viajeros SET password = ? WHERE id_viajero = ?";
@@ -138,5 +138,17 @@ class Usuario extends Model
         return $stmt->execute();
     }
 
+    public function eliminarUsuario($id_viajero)
+    {
+        $sql = "UPDATE transfer_viajeros SET status = 'inactivo' WHERE id_viajero = ?";
 
+        $stmt = $this->db->prepare($sql);
+        if ($stmt === false) {
+            error_log("Error al preparar la eliminación del hotel: " . $this->db->error);
+            return false;
+        }
+
+        $stmt->bind_param("i", $id_viajero);
+        return $stmt->execute();
+    }
 }

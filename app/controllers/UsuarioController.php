@@ -119,4 +119,36 @@ class UsuarioController extends Controller
         }
         exit();
     }
+
+    public function eliminarUsuario()
+    {
+
+        $this->requireMethod('POST');
+
+        $id_viajero = $_SESSION['user_id'] ?? null;
+
+        if (!$id_viajero) {
+            header('Location: ' . APP_URL . '/login');
+            exit();
+        }
+
+        $exito = $this->userModel->eliminarUsuario($id_viajero);
+
+        if ($exito) {
+
+            session_unset();
+
+            session_destroy();
+
+            session_start();
+            $_SESSION['mensaje_logout'] = 'Tu cuenta ha sido desactivada correctamente.';
+
+            header('Location: ' . APP_URL . '/login');
+            exit();
+        } else {
+            $mensaje = 'error_eliminar';
+            header('Location:' . APP_URL . '/usuario/mostrarPerfil?mensaje=' . $mensaje);
+            exit();
+        }
+    }
 }
