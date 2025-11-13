@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Model;
+use App\Models\Reserva;
 
 class Reserva extends Model
 {
@@ -36,7 +37,51 @@ class Reserva extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    /**
+     * Obtiene todas las reservas (llegadas o salidas) que caen
+     * dentro de un rango de fechas específico.
+     * Ideal para el calendario.
+     *
+     * @param string $fecha_inicio Formato 'Y-m-d'
+     * @param string $fecha_fin Formato 'Y-m-d'
+     * @return array|bool
+     */
+    public function getReservasPorRango($fecha_inicio, $fecha_fin)
+    {
+        /*
+         * Buscamos reservas donde:
+         * 1. La fecha de LLEGADA esté en el rango.
+         * O
+         * 2. La fecha de SALIDA esté en el rango.
+         * Y
+         * 3. No estén canceladas.
+         * También unimos con la tabla de hoteles para coger el nombre.
+         */
+        $sql = "SELECT r.*, h.usuario as nombre_hotel 
+                FROM transfer_reservas r
+                LEFT JOIN tranfer_hotel h ON r.id_destino = h.id_hotel
+                WHERE r.status != 'cancelada' 
+                AND (
+                       (r.fecha_entrada >= ? AND r.fecha_entrada <= ?)
+                       OR 
+                       (r.fecha_vuelo_salida >= ? AND r.fecha_vuelo_salida <= ?)
+                )
+                ORDER BY r.fecha_entrada, r.hora_entrada, r.fecha_vuelo_salida";
 
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            error_log("Error al preparar la consulta de rango: " . $this->db->error);
+            return false;
+        }
+
+        // Usamos las mismas fechas para ambos rangos (llegada y salida)
+        $stmt->bind_param("ssss", $fecha_inicio, $fecha_fin, $fecha_inicio, $fecha_fin);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
     /**
      * Crear una nueva reserva hecha por un usuario particular.
      * (el localizador se genera automáticamente)
@@ -52,7 +97,9 @@ class Reserva extends Model
         $origen_vuelo_entrada = null,
         $fecha_vuelo_salida = null,
         $hora_vuelo_salida = null,
-        $email_cliente = null
+        $email_cliente = null,
+        $numero_vuelo_salida = null,
+        $hora_recogida = null
     ) {
         
         if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_email'])) {
@@ -67,6 +114,8 @@ class Reserva extends Model
         if ($id_tipo_reserva == 1) { // Llegada
             $fecha_vuelo_salida = null;
             $hora_vuelo_salida = null;
+            $numero_vuelo_salida = null;
+            $hora_recogida = null;
         } elseif ($id_tipo_reserva == 2) { // Salida
             $fecha_entrada = null;
             $hora_entrada = null;
@@ -83,10 +132,11 @@ class Reserva extends Model
         $hora_entrada = $hora_entrada ? date('H:i:s', strtotime($hora_entrada)) : null;
         $fecha_vuelo_salida = $fecha_vuelo_salida ? date('Y-m-d', strtotime($fecha_vuelo_salida)) : null;
         $hora_vuelo_salida = $hora_vuelo_salida ? date('H:i:s', strtotime($hora_vuelo_salida)) : null;
+        $hora_recogida = $hora_recogida ? date('H:i:s', strtotime($hora_recogida)) : null;
 
         $sql = "INSERT INTO transfer_reservas 
-        (localizador, id_tipo_reserva, email_cliente, fecha_reserva, fecha_modificacion, id_destino, fecha_entrada, hora_entrada, numero_vuelo_entrada, origen_vuelo_entrada, fecha_vuelo_salida, hora_vuelo_salida, num_viajeros, id_vehiculo)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (localizador, id_tipo_reserva, email_cliente, fecha_reserva, fecha_modificacion, id_destino, fecha_entrada, hora_entrada, numero_vuelo_entrada, origen_vuelo_entrada, fecha_vuelo_salida, hora_vuelo_salida, num_viajeros, id_vehiculo, numero_vuelo_salida, hora_recogida)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $this->db->prepare($sql);
         if (!$stmt) {
@@ -96,7 +146,7 @@ class Reserva extends Model
 
         // Para manejar NULL correctamente en MySQL, se usa "s" y pasar null directamente
         $stmt->bind_param(
-            "sisssssssssiii",
+            "sisssissssssiiiss",
             $localizador,
             $id_tipo_reserva,
             $email_cliente,
@@ -110,7 +160,9 @@ class Reserva extends Model
             $fecha_vuelo_salida,
             $hora_vuelo_salida,
             $num_viajeros,
-            $id_vehiculo
+            $id_vehiculo,
+            $numero_vuelo_salida,
+            $hora_recogida
         );
 
         return $stmt->execute();
@@ -171,11 +223,16 @@ class Reserva extends Model
         $fecha_vuelo_salida = $datos['fecha_vuelo_salida'] ?? null;
         $hora_vuelo_salida = $datos['hora_vuelo_salida'] ?? null;
 
+        $numero_vuelo_salida = $datos['numero_vuelo_salida'] ?? null;
+        $hora_recogida = $datos['hora_recogida'] ?? null;
+
         $fecha_actual = date("Y-m-d H:i:s"); // Actualizamos la fecha de modificación
 
         if ($id_tipo_reserva == 1) { // 1 - Llegada
             $fecha_vuelo_salida = null;
             $hora_vuelo_salida = null;
+            $numero_vuelo_salida = null;
+            $hora_recogida = null;
         } elseif ($id_tipo_reserva == 2) { // 2 - Salida
             $fecha_entrada = null;
             $hora_entrada = null;
@@ -188,6 +245,7 @@ class Reserva extends Model
         $hora_entrada = $hora_entrada ? date('H:i:s', strtotime($hora_entrada)) : null;
         $fecha_vuelo_salida = $fecha_vuelo_salida ? date('Y-m-d', strtotime($fecha_vuelo_salida)) : null;
         $hora_vuelo_salida = $hora_vuelo_salida ? date('H:i:s', strtotime($hora_vuelo_salida)) : null;
+        $hora_recogida = $hora_recogida ? date('H:i:s', strtotime($hora_recogida)) : null;
 
         //sql update
         $sql = "UPDATE transfer_reservas SET
@@ -200,7 +258,9 @@ class Reserva extends Model
             origen_vuelo_entrada = ?,
             fecha_vuelo_salida = ?,
             hora_vuelo_salida = ?,
-            num_viajeros = ?
+            num_viajeros = ?,
+            numero_vuelo_salida = ?, 
+            hora_recogida = ?        
             WHERE id_reserva = ?"; // La condición es el ID
 
         $stmt = $this->db->prepare($sql);
@@ -210,8 +270,8 @@ class Reserva extends Model
         }
 
         //se vinculan los parámetros
-        $stmt->bind_param(
-            "issssssssii",
+$stmt->bind_param(
+            "iisssssssissi", 
             $id_tipo_reserva,
             $id_destino,
             $fecha_actual,
@@ -222,7 +282,9 @@ class Reserva extends Model
             $fecha_vuelo_salida,
             $hora_vuelo_salida,
             $num_viajeros,
-            $id_reserva // El ID va al final, coincidiendo con el WHERE
+            $numero_vuelo_salida,
+            $hora_recogida,
+            $id_reserva 
         );
 
         return $stmt->execute();

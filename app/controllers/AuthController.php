@@ -63,7 +63,7 @@ class AuthController extends Controller
         }
     }
 
-    public function authenticate()
+public function authenticate()
     {
         $this->requireMethod('POST');
 
@@ -79,8 +79,7 @@ class AuthController extends Controller
             header('Location: ' . APP_URL . '/auth/login?error=credentials');
             exit;
         }
-
-        //se regenera la sesión para evitar ataques de "fijación de sesión"
+        //se regenera la sesión para evitar ataques de fijación de sesión
         session_regenerate_id(true);
 
         //se guardan datos del usuario en la sesión
@@ -88,10 +87,21 @@ class AuthController extends Controller
         $_SESSION['user_name'] = $usuario['nombre'];
         $_SESSION['user_email'] = $usuario['email'];
 
-        header('Location: ' . APP_URL . '/usuario/mostrarPerfil');
-        exit;
+        // Comprobamos si el email es el del admin y guardamos el ROL
+        if ($usuario['email'] === 'admin@islatransfers.com') {
+            $_SESSION['user_rol'] = 'admin';
+        } else {
+            $_SESSION['user_rol'] = 'particular';
+        }
+        // Redirigir al panel de admin si es admin, o al perfil si es particular
+        if ($_SESSION['user_rol'] === 'admin') {
+            header('Location: ' . APP_URL . '/admin/calendar');
+            exit;
+        } else {
+            header('Location: ' . APP_URL . '/usuario/mostrarPerfil');
+            exit;
+        }
     }
-
     public function logout()
     {
         //borra todas las variables de la sesión

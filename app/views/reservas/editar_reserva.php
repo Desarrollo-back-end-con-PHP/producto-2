@@ -112,7 +112,7 @@ $mensaje = $data['mensaje'] ?? null;
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label for="fecha_vuelo_salida" class="form-label">Fecha de Salida</Vuelo></label>
+                        <label for="fecha_vuelo_salida" class="form-label">Fecha de Salida(Vuelo)</label>
                         <input type="date" id="fecha_vuelo_salida" name="fecha_vuelo_salida" class="form-control"
                             value="<?php echo htmlspecialchars($data['reserva']['fecha_vuelo_salida']); ?>">
                     </div>
@@ -121,7 +121,19 @@ $mensaje = $data['mensaje'] ?? null;
                         <input type="time" id="hora_vuelo_salida" name="hora_vuelo_salida" class="form-control"
                             value="<?php echo htmlspecialchars($data['reserva']['hora_vuelo_salida']); ?>">
                     </div>
-                    <!-- (Según requisitos, aquí iría "hora de recogida", pero el controller espera 'hora_vuelo_salida') -->
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="numero_vuelo_salida" class="form-label">Número de Vuelo (Salida)</label>
+                        <input type="text" id="numero_vuelo_salida" name="numero_vuelo_salida" class="form-control" placeholder="Ej: IB3902"
+                            value="<?php echo htmlspecialchars($data['reserva']['numero_vuelo_salida'] ?? ''); ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="hora_recogida" class="form-label">Hora de Recogida (en Hotel)</label>
+                        <input type="time" id="hora_recogida" name="hora_recogida" class="form-control"
+                            value="<?php echo htmlspecialchars($data['reserva']['hora_recogida'] ?? ''); ?>">
+                        <small class="text-muted">La hora a la que hay que recoger al cliente.</small>
+                    </div>
                 </div>
             </div>
 

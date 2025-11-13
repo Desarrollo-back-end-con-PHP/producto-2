@@ -17,19 +17,22 @@ class Router
      */
     public static function dispatch()
     {
+        // La URL que el router va a procesar (solo la ruta, ej: 'admin/calendar')
+        // Usamos isset() para evitar errores si no viene ninguna ruta
+        $url_path = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'home/index';
 
-        $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'home/index';
-
+        // Si el usuario simplemente accedió a la raíz sin ruta, lo redirigimos
         if (empty($_GET['url'])) {
-            header('Location: /home'); // Redirige a /home si la URL está vacía
+            header('Location: ' . APP_URL . '/home'); // Redirige a /home si la URL está vacía
             exit;
         }
 
-        $urlParts = explode('/', filter_var($url, FILTER_SANITIZE_URL));
+        // Separamos la ruta en partes (Controller, Method, Params)
+        $urlParts = explode('/', filter_var($url_path, FILTER_SANITIZE_URL));
 
         $baseNamespace = 'App\\Controllers\\';
 
-        // *** LÓGICA DE API ***
+        // --- LÓGICA DE API ---
         if (!empty($urlParts[0]) && $urlParts[0] === 'api') {
             $baseNamespace = 'App\\Controllers\\Api\\';
             array_shift($urlParts); // Quita 'api' de la URL
@@ -50,46 +53,32 @@ class Router
             array_shift($urlParts);
         }
 
-        // --- Obtener Parámetros ---
-        $params = $urlParts;
+        // --- Obtener Parámetros de Ruta ---
+        $params = $urlParts; 
 
         // --- Ejecutar ---
         if (class_exists($fqcn)) {
             $controller = new $fqcn();
 
             if (method_exists($controller, $methodName)) {
-                // Llama al método y pasa los parámetros restantes
+                // IMPORTANTE: call_user_func_array Llama al método y pasa los parámetros.
+                // Los parámetros de la Query String (vista, mes, año) son accesibles globalmente.
                 call_user_func_array([$controller, $methodName], $params);
             } else {
-                // --- INICIO DE CORRECCIÓN (Método no encontrado) ---
-                // Preparamos el mensaje de error
+                // --- Manejo de Error (Método no encontrado) ---
                 $errorMessage = 'El método "' . $methodName . '" no existe en la clase "' . $fqcn . '".';
-
-                // Enviamos el código de estado HTTP 404
                 http_response_code(404);
-
-                // Cargamos nuestra vista 404 personalizada
                 $controller = new Controller();
                 $controller->loadView('errors/404', ['errorMessage' => $errorMessage]);
-
-                // Detenemos la ejecución
                 exit;
-                // --- FIN DE CORRECCIÓN ---
             }
         } else {
-            // --- INICIO DE CORRECCIÓN (Controlador no encontrado) ---
-            // Preparamos el mensaje de error
+            // --- Manejo de Error (Controlador no encontrado) ---
             $errorMessage = 'La clase controladora "' . $fqcn . '" no fue encontrada.';
-
-            // Enviamos el código de estado HTTP 404
             http_response_code(404);
-
-            // Cargamos nuestra vista 404 personalizada
             $controller = new Controller();
             $controller->loadView('errors/404', ['errorMessage' => $errorMessage]);
-            // Detenemos la ejecución
             exit;
-            // --- FIN DE CORRECCIÓN ---
         }
     }
-}
+} 

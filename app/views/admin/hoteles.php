@@ -2,6 +2,7 @@
 // $data que pasa el AdminController
 $hoteles = $data['hoteles'] ?? [];
 $titulo = $data['titulo'] ?? 'Gestión de Hoteles';
+require 'nav.php';
 ?>
 
 <h1 class="display-6 fw-bold mb-4"><?php echo htmlspecialchars($titulo); ?></h1>

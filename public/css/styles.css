@@ -1,62 +1,97 @@
-
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-
 main {
     flex-grow: 1; 
 }
-
 
 .navbar {
     background-color: #007bff !important; 
 }
 
 
-.hero {
-     h1 {
-         color: #007bff;
-     }
+.hero h1 {
+    color: #007bff;
 }
 
-
-
-/*  */
-/* --- Avatar de Usuario para Navbar --- */
-
 .user-avatar {
-    width: 32px;            /* Ancho del círculo */
-    height: 32px;           /* Alto del círculo */
-    border-radius: 50%;   /* Lo hace 100% redondo */
-    
-    /* Color de fondo y de la letra */
-    background-color: #0d6efd; /* Azul primario de Bootstrap */
-    color: #ffffff;         /* Letra blanca */
-    
-    /* Para centrar la inicial perfectamente */
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    
     font-weight: bold;
-    font-size: 0.9rem;      /* Tamaño de la letra */
+    font-size: 0.9rem;
 }
 
-/* Ajuste para que el texto "Hola, Pol" (que ahora está dentro 
-   del .nav-link) tenga el color correcto.
-   ¡Es posible que no necesites esto si tu CSS ya lo maneja!
-*/
 .navbar-nav .nav-link {
     display: flex;
     align-items: center;
 }
 
-/* Asegura que el menú desplegable se alinee a la derecha 
-   en pantallas de escritorio.
-*/
+.calendar-table td {
+    height: 120px;
+    vertical-align: top;
+    padding: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.cell-day {
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-align: left;
+    padding-left: 5px;
+    color: #6c757d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.calendar-table td.bg-light .cell-day {
+    color: #b3b3b3;
+}
+
+.cell-content {
+    max-height: 90px;
+    overflow-y: auto;
+}
+
+.cell-content .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cell-day .text-success {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #28a745;
+    color: #fff;
+    font-size: 14px; 
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.cell-day .text-success:hover {
+    background-color: #218838;
+    color: #fff;
+}
+
+
+/* Asegura que el menú desplegable se alinee a la derecha */
 @media (min-width: 992px) {
     .navbar-nav .dropdown-menu-end {
         right: 0;

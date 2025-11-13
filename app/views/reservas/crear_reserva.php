@@ -66,6 +66,16 @@ $mensaje = $data['mensaje'] ?? null;
                 <input type="number" id="num_viajeros" name="num_viajeros" class="form-control" min="1" value="1" required>
             </div>
 
+            <?php if (isset($_SESSION['user_rol']) && $_SESSION['user_rol'] === 'admin' ): ?>
+                <div class="mb-3">
+                    <label for="email_cliente" class="form-label fw-bold">Email del Cliente (para la reserva)</label>
+                    <input type="email" id="email_cliente" name="email_cliente"   class="form-control" placeholder="ejemplo@cliente.com" required>
+                    <small class="text-muted">El admin debe rellenar esto para asignar la reserva al cliente correcto.</small>
+                </div>
+            <?php endif; ?>
+
+            <hr class="my-4">
+
             <hr class="my-4">
 
             <!-- Sección de Llegada (Oculta por defecto) -->
@@ -100,14 +110,24 @@ $mensaje = $data['mensaje'] ?? null;
                 
                  <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label for="fecha_vuelo_salida" class="form-label">Fecha de Salida</Vuelo></label>
+                        <label for="fecha_vuelo_salida" class="form-label">Fecha de Salida(Vuelo)</label>
                         <input type="date" id="fecha_vuelo_salida" name="fecha_vuelo_salida" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label for="hora_vuelo_salida" class="form-label">Hora de Salida (Despegue)</label>
                         <input type="time" id="hora_vuelo_salida" name="hora_vuelo_salida" class="form-control">
                     </div>
-                     <!-- (Según requisitos, aquí iría "hora de recogida", pero el controller espera 'hora_vuelo_salida') -->
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="numero_vuelo_salida" class="form-label">Número de Vuelo (Salida)</label>
+                        <input type="text" id="numero_vuelo_salida" name="numero_vuelo_salida" class="form-control" placeholder="Ej: IB3902">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="hora_recogida" class="form-label">Hora de Recogida (en Hotel)</label>
+                        <input type="time" id="hora_recogida" name="hora_recogida" class="form-control">
+                        <small class="text-muted">Calculada en base a la hora del vuelo.</small>
+                    </div>
                 </div>
             </div>
             <?php if (isset($_SESSION['user_email']) && $_SESSION['user_email'] === 'admin@islatransfers.com'): ?>

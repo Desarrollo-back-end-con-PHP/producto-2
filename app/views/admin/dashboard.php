@@ -1,6 +1,7 @@
 <!-- app/views/admin/dashboard.php -->
+<?php require 'nav.php'; ?>
 
-<h1 class="display-6 fw-bold mb-4">Administration Dashboard</h1>
+<h1 class="display-6 fw-bold mb-4">Información General</h1>
 
 <!-- Stats Cards Row -->
 <div class="row g-4">
