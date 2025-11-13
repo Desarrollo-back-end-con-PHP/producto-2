@@ -1,6 +1,10 @@
 <?php
-// Asumimos que el controlador nos pasa $hoteles (de HotelModel)
-// y opcionalmente un $mensaje de error.
+$reserva_guardada = $_SESSION['reserva_temporal'] ?? null;
+
+if ($reserva_guardada) {
+    unset($_SESSION['reserva_temporal']);
+}
+
 $hoteles = $data['hoteles'] ?? [];
 $mensaje = $data['mensaje'] ?? null;
 ?>
@@ -14,9 +18,9 @@ $mensaje = $data['mensaje'] ?? null;
 </div>
 
 <!-- Contenedor de Alerta (si existe) -->
-<?php if ($mensaje && $mensaje === 'error_creacion'): ?>
+<?php if (!empty($mensaje)): ?>
     <div id="alertaTemporal" class="alert alert-danger shadow-sm" role="alert">
-        Hubo un error al crear tu reserva. Por favor, inténtalo de nuevo.
+        <?php echo htmlspecialchars($mensaje); ?>
     </div>
 <?php endif; ?>
 
@@ -33,10 +37,10 @@ $mensaje = $data['mensaje'] ?? null;
                 <div class="col-md-6">
                     <label for="id_tipo_reserva" class="form-label">Tipo de Trayecto</label>
                     <select id="id_tipo_reserva" name="id_tipo_reserva" class="form-select" required>
-                        <option value="" selected disabled>Selecciona un tipo...</option>
-                        <option value="1">1. Aeropuerto a Hotel (Llegada)</option>
-                        <option value="2">2. Hotel a Aeropuerto (Salida)</option>
-                        <option value="3">3. Ida y Vuelta (Llegada y Salida)</option>
+                        <option value="" disabled <?php if (!isset($reserva_guardada['id_tipo_reserva'])) echo 'selected'; ?>>Selecciona un tipo...</option>
+                        <option value="1" <?php if (isset($reserva_guardada['id_tipo_reserva']) && $reserva_guardada['id_tipo_reserva'] == '1') echo 'selected'; ?>>1. Aeropuerto a Hotel (Llegada)</option>
+                        <option value="2" <?php if (isset($reserva_guardada['id_tipo_reserva']) && $reserva_guardada['id_tipo_reserva'] == '2') echo 'selected'; ?>>2. Hotel a Aeropuerto (Salida)</option>
+                        <option value="3" <?php if (isset($reserva_guardada['id_tipo_reserva']) && $reserva_guardada['id_tipo_reserva'] == '3') echo 'selected'; ?>>3. Ida y Vuelta (Llegada y Salida)</option>
                     </select>
                 </div>
 
@@ -48,13 +52,11 @@ $mensaje = $data['mensaje'] ?? null;
 
                         <?php if (!empty($hoteles)): ?>
                             <?php foreach ($hoteles as $hotel): ?>
-                                <option value="<?php echo htmlspecialchars($hotel['id_hotel']); ?>">
-                                    <?php echo htmlspecialchars($hotel['usuario']); // Asumimos que 'usuario' es el nombre del hotel 
-                                    ?>
+                                <option value="<?php echo htmlspecialchars($hotel['id_hotel']); ?>"
+                                    <?php if (isset($reserva_guardada['id_destino']) && $reserva_guardada['id_destino'] == $hotel['id_hotel']) echo 'selected'; ?>>
+                                    <?php echo htmlspecialchars($hotel['usuario']); ?>
                                 </option>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <option value="" disabled>No hay hoteles disponibles</option>
                         <?php endif; ?>
 
                     </select>
@@ -64,7 +66,7 @@ $mensaje = $data['mensaje'] ?? null;
             <!-- Fila 2: Número de Viajeros -->
             <div class="mb-3">
                 <label for="num_viajeros" class="form-label">Número de Viajeros</label>
-                <input type="number" id="num_viajeros" name="num_viajeros" class="form-control" min="1" value="1" required>
+                <input type="number" id="num_viajeros" name="num_viajeros" class="form-control" min="1" value="<?php echo $reserva_guardada['num_viajeros'] ?? 1; ?>" required>
             </div>
 
 
@@ -77,21 +79,21 @@ $mensaje = $data['mensaje'] ?? null;
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="fecha_entrada" class="form-label">Fecha de Llegada</label>
-                        <input type="date" id="fecha_entrada" name="fecha_entrada" class="form-control">
+                        <input type="date" id="fecha_entrada" name="fecha_entrada" value="<?php echo $reserva_guardada['fecha_entrada'] ?? ''; ?>" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label for="hora_entrada" class="form-label">Hora de Llegada (Aterrizaje)</label>
-                        <input type="time" id="hora_entrada" name="hora_entrada" class="form-control">
+                        <input type="time" id="hora_entrada" name="hora_entrada" class="form-control" value="<?php echo $reserva_guardada['hora_entrada'] ?? ''; ?>">
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="numero_vuelo_entrada" class="form-label">Número de Vuelo</label>
-                        <input type="text" id="numero_vuelo_entrada" name="numero_vuelo_entrada" class="form-control" placeholder="Ej: IB3901">
+                        <input type="text" id="numero_vuelo_entrada" name="numero_vuelo_entrada" class="form-control" placeholder="Ej: IB3901" value="<?php echo $reserva_guardada['numero_vuelo_entrada'] ?? ''; ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="origen_vuelo_entrada" class="form-label">Aeropuerto de Origen</label>
-                        <input type="text" id="origen_vuelo_entrada" name="origen_vuelo_entrada" class="form-control" placeholder="Ej: Madrid (MAD)">
+                        <input type="text" id="origen_vuelo_entrada" name="origen_vuelo_entrada" class="form-control" placeholder="Ej: Madrid (MAD)" value="<?php echo $reserva_guardada['origen_vuelo_entrada'] ?? ''; ?>">
                     </div>
                 </div>
             </div>
@@ -103,21 +105,21 @@ $mensaje = $data['mensaje'] ?? null;
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="fecha_vuelo_salida" class="form-label">Fecha de Salida(Vuelo)</label>
-                        <input type="date" id="fecha_vuelo_salida" name="fecha_vuelo_salida" class="form-control">
+                        <input type="date" id="fecha_vuelo_salida" name="fecha_vuelo_salida" class="form-control" value="<?php echo $reserva_guardada['fecha_vuelo_salida'] ?? ''; ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="hora_vuelo_salida" class="form-label">Hora de Salida (Despegue)</label>
-                        <input type="time" id="hora_vuelo_salida" name="hora_vuelo_salida" class="form-control">
+                        <input type="time" id="hora_vuelo_salida" name="hora_vuelo_salida" class="form-control" value="<?php echo $reserva_guardada['hora_vuelo_salida'] ?? ''; ?>">
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label for="numero_vuelo_salida" class="form-label">Número de Vuelo (Salida)</label>
-                        <input type="text" id="numero_vuelo_salida" name="numero_vuelo_salida" class="form-control" placeholder="Ej: IB3902">
+                        <input type="text" id="numero_vuelo_salida" name="numero_vuelo_salida" class="form-control" placeholder="Ej: IB3902" value="<?php echo $reserva_guardada['numero_vuelo_salida'] ?? ''; ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="hora_recogida" class="form-label">Hora de Recogida (en Hotel)</label>
-                        <input type="time" id="hora_recogida" name="hora_recogida" class="form-control">
+                        <input type="time" id="hora_recogida" name="hora_recogida" class="form-control" value="<?php echo $reserva_guardada['hora_recogida'] ?? ''; ?>">
                         <small class="text-muted">Calculada en base a la hora del vuelo.</small>
                     </div>
                 </div>

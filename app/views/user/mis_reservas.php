@@ -18,7 +18,6 @@ $user_id    = $data['user_id'] ?? 0;
             <div class="col-lg-6">
                 <div class="card shadow-sm border">
                     <div class="card-body p-4">
-                        <!-- Tipo de trayecto -->
                         <h5 class="card-title mb-3">
                             Tipo de Trayecto:
                             <?php
@@ -31,17 +30,22 @@ $user_id    = $data['user_id'] ?? 0;
                             ?>
                         </h5>
 
-                        <!-- Hotel y número de viajeros -->
                         <p><strong>Hotel:</strong> <?= htmlspecialchars($hotelesMap[$reserva['id_destino']] ?? '-') ?></p>
                         <p><strong>Número de Viajeros:</strong> <?= $reserva['num_viajeros'] ?></p>
 
-                        <!-- Creado por -->
                         <p>
                             <strong>Creado por:</strong>
                             <?= isset($data['reservasAdminMap'][$reserva['id_reserva']]) ? 'Administrador' : 'Usuario' ?>
+
+                            (<?= htmlspecialchars($reserva['email_cliente']) ?>)
                         </p>
 
-                        <!-- Detalles de llegada -->
+                        <p>
+                            <strong>Localizador:</strong>
+                            <span class="fw-bold text-primary"><?= htmlspecialchars($reserva['localizador']) ?></span>
+                        </p>
+
+
                         <?php if ($reserva['id_tipo_reserva'] == 1 || $reserva['id_tipo_reserva'] == 3): ?>
                             <div class="mt-3 p-3 bg-light rounded">
                                 <h6 class="mb-2">Detalles de Llegada</h6>
@@ -52,7 +56,6 @@ $user_id    = $data['user_id'] ?? 0;
                             </div>
                         <?php endif; ?>
 
-                        <!-- Detalles de salida -->
                         <?php if ($reserva['id_tipo_reserva'] == 2 || $reserva['id_tipo_reserva'] == 3): ?>
                             <div class="mt-3 p-3 bg-light rounded">
                                 <h6 class="mb-2">Detalles de Salida</h6>

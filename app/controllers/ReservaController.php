@@ -7,12 +7,14 @@ use App\Helpers\ProfileMessageHelper;
 use App\Models\Reserva;
 use App\Models\Trayecto;
 use App\Models\Hotel;
+use App\Models\Usuario;
 
 class ReservaController extends Controller
 {
     protected $reservaModel;
     protected $trayectoModel;
     protected $hotelModel;
+    protected $userModel;
 
     public function __construct()
     {
@@ -22,6 +24,7 @@ class ReservaController extends Controller
         $this->reservaModel = new Reserva();
         $this->trayectoModel = new Trayecto();
         $this->hotelModel = new Hotel();
+        $this->userModel = new Usuario();
     }
 
     public function index()
@@ -34,9 +37,16 @@ class ReservaController extends Controller
         $trayectos = $this->trayectoModel->getAllTrayectos();
         $hoteles = $this->hotelModel->getAll();
 
+        $mensaje = $_SESSION['mensaje_error'] ?? null;
+
+        if ($mensaje) {
+            unset($_SESSION['mensaje_error']);
+        }
+
         $this->loadView('reservas/crear_reserva', [
             'trayectos' => $trayectos,
-            'hoteles' => $hoteles
+            'hoteles' => $hoteles,
+            'mensaje' => $mensaje
         ]);
     }
 
@@ -65,6 +75,8 @@ class ReservaController extends Controller
 
         $email_cliente = null;
         $codigo_admin = $_POST['codigo_admin'] ?? null;
+        $perfil_completo = true; //asumimos que el perfil esta completo
+
 
         if ($this->isAdminLoggedIn()) {
             $email_cliente = $_POST['email_cliente'] ?? null;
@@ -75,8 +87,31 @@ class ReservaController extends Controller
                 header("Location: " . APP_URL . "/reserva/crear");
                 exit;
             }
+            if (!$this->userModel->isProfileComplete($email_cliente)) {
+                $_SESSION['mensaje_error'] = "El perfil del cliente ($email_cliente) está incompleto. Pida al cliente que rellene sus datos en 'Mi Perfil' antes de reservar.";
+                header("Location: " . APP_URL . "/reserva/crear");
+                exit;
+            }
         } else {
             $email_cliente = $_SESSION['user_email'];
+            if (!$this->userModel->isProfileComplete($email_cliente)) {
+                $perfil_completo = false;
+            }
+        }
+
+        if (!$perfil_completo) {
+            // 1. Guardamos TODOS los datos del formulario en la sesión
+            $_SESSION['reserva_temporal'] = $_POST;
+
+            // guardamos mensaje
+            $_SESSION['mensaje'] = 'PROFILE_REQUIRED';
+
+            // 2. Guardamos el email que necesita ser actualizado
+            $_SESSION['email_para_actualizar'] = $email_cliente;
+
+            // 3. Redirigimos a la página de perfil
+            header("Location: " . APP_URL . "/usuario/mostrarPerfil?causa=reserva");
+            exit;
         }
 
         $localizador = $this->reservaModel->crearReserva(

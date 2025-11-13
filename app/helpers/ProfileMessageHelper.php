@@ -31,6 +31,7 @@ class ProfileMessageHelper
             self::ERROR_PASS_SHORT => 'Tu contraseña es muy corta. Por favor, usa al menos 8 caracteres.',
             self::ERROR_EMAIL => 'Por favor, introduce un correo electrónico válido.',
             self::ERROR_CAMPOS_VACIOS => 'Todos los campos son obligatorios. Asegúrate de completar todos antes de guardar.',
+            'PROFILE_REQUIRED' => 'Tu perfil está incompleto. Por favor, rellena tus datos para continuar con la reserva.',
             default => '',
         };
     }
@@ -38,11 +39,13 @@ class ProfileMessageHelper
     public static function getClaseAlerta(?string $mensaje): string
     {
         return match ($mensaje) {
-            self::EXITO_DATOS, 
+            self::EXITO_DATOS,
             self::EXITO_PASS,
             self::EXITO_RESERVA => 'alert-success',
-            
-            self::ERROR_DATOS, 
+
+            'PROFILE_REQUIRED' => 'alert-warning',
+
+            self::ERROR_DATOS,
             self::ERROR_BD_PASS,
             self::ERROR_CAMPOS_VACIOS,
             self::ERROR_EMAIL,

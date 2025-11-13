@@ -151,4 +151,35 @@ class Usuario extends Model
         $stmt->bind_param("i", $id_viajero);
         return $stmt->execute();
     }
+
+    public function isProfileComplete($email)
+    {
+        // Campos que deben estar rellenos
+        $sql = "SELECT apellido1, direccion, ciudad, pais 
+                FROM transfer_viajeros WHERE email = ?";
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) return false;
+
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $usuario = $resultado->fetch_assoc(); //recoge los resultados
+
+        if (!$usuario) {
+            return false; // El usuario no existe
+        }
+
+        // Comprueba si alguno de los campos obligatorios está vacío o nulo
+        // Usamos trim() por si solo guardó espacios en blanco
+        if (
+            empty(trim((string)$usuario['apellido1'])) ||
+            empty(trim((string)$usuario['direccion'])) ||
+            empty(trim((string)$usuario['ciudad'])) ||
+            empty(trim((string)$usuario['pais']))
+        ) {
+            return false;
+        }
+        return true;
+    }
 }

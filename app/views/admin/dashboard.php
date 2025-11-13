@@ -13,7 +13,7 @@
                 <h5 class="card-title fs-4">Pending Reservations</h5>
                 <!-- A number from PHP would go here, e.g., <?php echo $pendingReservations; ?> -->
                 <p class="card-text display-4 fw-bold">8</p>
-                <a href="<?php echo APP_URL; ?>/admin/reservas" class="stretched-link text-white">View details</a>
+                <a href="<?php echo APP_URL; ?>/reserva/misreservas" class="stretched-link text-white">View details</a>
             </div>
         </div>
     </div>

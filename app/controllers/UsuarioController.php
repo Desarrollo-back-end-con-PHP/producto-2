@@ -20,12 +20,19 @@ class UsuarioController extends Controller
 
     public function mostrarPerfil()
     {
-        $id_viajero = $_SESSION['user_id'] ?? 1;
+        $id_viajero = $_SESSION['user_id'];
         $datosUsuario = $this->userModel->obtenerDatosPersonales($id_viajero);
+
+        $mensaje = $_GET['mensaje'] ?? null;
+        // Comprueba si hay un mensaje especial en la sesión (el que acabamos de poner)
+        if (isset($_SESSION['mensaje'])) {
+            $mensaje = $_SESSION['mensaje']; // Sobrescribe el mensaje de la URL
+            unset($_SESSION['mensaje']); // Límpialo para que no se repita
+        }
 
         $this->loadView('user/my_profile', [
             'usuario' => $datosUsuario,
-            'mensaje' => $_GET['mensaje'] ?? null,
+            'mensaje' => $mensaje,
         ]);
     }
 
@@ -84,6 +91,12 @@ class UsuarioController extends Controller
         );
 
         if ($exito) {
+            if (isset($_SESSION['reserva_temporal'])) {
+
+                //  Si hay una reserva pausada redirigimos de vuelta al formulario de reserva.
+                header('Location: ' . APP_URL . '/reserva/crear');
+                exit;
+            }
             header('Location: ' . $redirectURL . '?mensaje=' . ProfileMessageHelper::EXITO_DATOS);
         } else {
             header('Location: ' . $redirectURL . '?mensaje=' . ProfileMessageHelper::ERROR_DATOS);
@@ -95,7 +108,7 @@ class UsuarioController extends Controller
     {
         $this->requireMethod('POST');
 
-        $id_viajero = $_SESSION['id_viajero'] ?? 1;
+        $id_viajero = $_SESSION['user_id'];
         $nuevaContrasena = $_POST['nueva_contrasena'] ?? '';
         $confirmarContrasena = $_POST['confirmar_contrasena'] ?? '';
 
