@@ -90,8 +90,60 @@ main {
     color: #fff;
 }
 
+.hero-gradient {
+    background: linear-gradient(90deg, #005c97, #007bff 60%, #363795);
+    color: white;
+}
 
-/* Asegura que el menú desplegable se alinee a la derecha */
+/* ============================================ */
+/* 1. ESTILOS PARA EL HERO CON IMAGEN */
+/* ============================================ */
+
+.hero-section-with-image {
+    /* AQUÍ PONES LA URL DE TU IMAGEN
+      Ej: url('https://tusitio.com/img/playa-transfer.jpg') 
+    */
+    background-image: url('.././img/hero-image.webp');
+    
+    background-size: cover;       /* Cubre todo el área */
+    background-position: center;  /* Centra la imagen */
+    padding: 10rem 0;             /* Espaciado vertical (alto) */
+    position: relative;           /* Necesario para la capa de superposición */
+}
+
+/* Capa de superposición oscura */
+.hero-section-with-image .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */
+    z-index: 1;
+}
+
+/* Contenedor del texto (para que esté por ENCIMA de la superposición)
+  Bootstrap usa 'position-relative' para esto, así que ya está en el HTML.
+*/
+.hero-section-with-image .container {
+    z-index: 2;
+}
+
+
+/* ============================================ */
+/* 3. ESTILOS PARA LOS ICONOS DE "CÓMO FUNCIONA" */
+/* ============================================ */
+
+.feature-icon-simple {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%; /* Círculo perfecto */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 @media (min-width: 992px) {
     .navbar-nav .dropdown-menu-end {
         right: 0;

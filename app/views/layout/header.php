@@ -10,6 +10,9 @@
     <!-- Asegúrate de que esta ruta es correcta y el archivo CSS se está cargando -->
     <link rel="stylesheet" href="<?php echo APP_URL; ?>/css/styles.css">
 
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
     <title><?php echo isset($title) ? $title : 'Isla Transfers'; ?></title>
 </head>
 
