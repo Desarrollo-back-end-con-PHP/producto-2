@@ -1,5 +1,5 @@
 
-USE isla_transfers;
+USE wordpress4;
 
 -- modificación tabla trasfer_viajeros para usarla para el login
 ALTER TABLE `transfer_viajeros`

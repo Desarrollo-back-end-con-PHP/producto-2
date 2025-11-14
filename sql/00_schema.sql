@@ -1,5 +1,5 @@
 -- Usar la base de datos
-USE isla_transfers;
+USE wordpress4;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
