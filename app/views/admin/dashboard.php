@@ -78,24 +78,60 @@
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- TODO: Load data dynamically -->
-                    <tr>
-                        <td>#1024</td>
-                        <td>Ana García</td>
-                        <td>28/10/2025 - 10:30</td>
-                        <td>Airport</td>
-                        <td>Hotel Palace</td>
-                        <td><span class="badge bg-warning text-dark">Pending</span></td>
-                    </tr>
-                    <tr>
-                        <td>#1023</td>
-                        <td>Carlos Pérez</td>
-                        <td>28/10/2025 - 11:15</td>
-                        <td>Hotel Sol</td>
-                        <td>Airport</td>
-                        <td><span class="badge bg-success">Confirmed</span></td>
-                    </tr>
+<tbody>
+                    <?php if (empty($data['reservas'])): ?>
+                        
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No hay reservas próximas.</td>
+                        </tr>
+
+                    <?php else: ?>
+                        
+                        <?php foreach ($data['reservas'] as $reserva): ?>
+                            <?php
+                                // Lógica para origen y destino
+                                $origen = 'N/D';
+                                $destino = 'N/D';
+                                $fecha = 'N/D';
+                                $hora = '';
+
+                                // 1 = Aeropuerto a Hotel
+                                if ($reserva['id_tipo_reserva'] == 1) {
+                                    $origen = 'Aeropuerto';
+                                    $destino = $data['hotelesMap'][$reserva['id_destino']] ?? 'Hotel Desconocido';
+                                    $fecha = $reserva['fecha_entrada'];
+                                    $hora = $reserva['hora_entrada'];
+                                } 
+                                // 2 = Hotel a Aeropuerto
+                                else if ($reserva['id_tipo_reserva'] == 2) {
+                                    $origen = $data['hotelesMap'][$reserva['id_destino']] ?? 'Hotel Desconocido';
+                                    $destino = 'Aeropuerto';
+                                    $fecha = $reserva['fecha_vuelo_salida'];
+                                    $hora = $reserva['hora_recogida'];
+                                }
+                                // 3 = Ida y Vuelta (se podría mostrar solo la ida)
+                                else if ($reserva['id_tipo_reserva'] == 3) {
+                                    $origen = 'Aeropuerto (Ida y Vuelta)';
+                                    $destino = $data['hotelesMap'][$reserva['id_destino']] ?? 'Hotel Desconocido';
+                                    $fecha = $reserva['fecha_entrada'];
+                                    $hora = $reserva['hora_entrada'];
+                                }
+                            ?>
+                            <tr>
+                                <td><strong><?php echo htmlspecialchars($reserva['localizador']); ?></strong></td>
+                                
+                                <td><?php echo htmlspecialchars($reserva['email_cliente']); ?></td>
+                                
+                                <td><?php echo htmlspecialchars(date('d/m/Y', strtotime($fecha))); ?> - <?php echo htmlspecialchars(date('H:i', strtotime($hora))); ?></td>
+                                
+                                <td><?php echo htmlspecialchars($origen); ?></td>
+                                
+                                <td><?php echo htmlspecialchars($destino); ?></td>
+                                
+                                <td><span class="badge bg-success">Confirmada</span></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

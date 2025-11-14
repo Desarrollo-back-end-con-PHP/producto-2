@@ -30,16 +30,33 @@ class AdminController extends Controller
         $this->dashboard();
     }
 
-    public function dashboard()
+public function dashboard()
     {
+        // 1. Obtener hoteles y contarlos (esto ya lo tenías)
         $hoteles = $this->hotelModel->getAll();
         $totalHoteles = $hoteles ? count($hoteles) : 0;
 
+        // 2. [NUEVO] Crear el mapa de hoteles (para mostrar nombres en la tabla)
+        $hotelesMap = [];
+        foreach ($hoteles as $hotel) {
+            // Asumiendo que 'usuario' es el nombre del hotel, 
+            // igual que en tu ReservaController
+            $hotelesMap[$hotel['id_hotel']] = $hotel['usuario']; 
+        }
+
+        // 3. [NUEVO] Obtener las reservas
+        // Usamos el mismo método que en ReservaController para admin
+        $reservas = $this->reservaModel->getTodasReservas();
+
+        // 4. [MODIFICADO] Pasar los nuevos datos a la vista
         $data = [
-            'title' => 'Admin Dashboard',
-            'totalHoteles' => $totalHoteles,
-            'vista_actual' => 'dashboard'
+            'title'          => 'Admin Dashboard',
+            'totalHoteles'   => $totalHoteles,
+            'reservas'       => $reservas ?? [], // Pasamos las reservas
+            'hotelesMap'     => $hotelesMap,     // Pasamos el mapa de hoteles
+            'vista_actual'   => 'dashboard'
         ];
+        
         $this->loadView('admin/dashboard', $data);
     }
 
