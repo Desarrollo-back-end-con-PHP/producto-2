@@ -10,8 +10,8 @@ $usuario = $data['usuario'];
 ?>
 
 
-<div class="mb-4 d-flex align-items-center justify-content-between">
-    <div>
+<div class="d-flex align-items-center justify-content-between">
+    <div class="w-100">
         <h1>Mi Perfil</h1>
         <p class="fs-5 text-muted">
             Hola, <strong class="fw-semibold text-dark"><?php echo htmlspecialchars($usuario['nombre']); ?></strong>.

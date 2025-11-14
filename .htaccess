@@ -1,0 +1,23 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Establece la base del subdirectorio
+    RewriteBase /~uocx4/travel/
+
+    # --- REGLA 1 (NUEVA): PARA ARCHIVOS ESTÁTICOS (CSS/JS/IMG) ---
+    # Si la petición NO es para un directorio Y el archivo SÍ existe dentro de /public/
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/~uocx4/travel/public/$1 -f
+    # ...sírvelo directamente desde /public/ (sin pasar por index.php)
+    # Ejemplo: /css/styles.css -> /public/css/styles.css
+    RewriteRule ^(.*)$ public/$1 [L]
+
+
+    # --- REGLA 2: PARA RUTAS DE LA APLICACIÓN (LOGIN, ETC.) ---
+    # Si la petición NO es un archivo o directorio real (en la raíz)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # ...mándaselo al index.php de /public/
+    # Ejemplo: /auth/login -> /public/index.php?url=auth/login
+    RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]
+</IfModule>

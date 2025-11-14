@@ -1,5 +1,5 @@
 -- Usar la base de datos correcta
-USE isla_transfers;
+USE wordpress4;
 
 -- --------------------------------------------------------
 -- PASO 1: VACIAR TABLAS (IDEMPOTENTE)
