@@ -32,11 +32,11 @@ class AdminController extends Controller
 
 public function dashboard()
     {
-        // 1. Obtener hoteles y contarlos (esto ya lo tenías)
+        // Obtener hoteles y contarlos (esto ya lo tenías)
         $hoteles = $this->hotelModel->getAll();
         $totalHoteles = $hoteles ? count($hoteles) : 0;
 
-        // 2. [NUEVO] Crear el mapa de hoteles (para mostrar nombres en la tabla)
+        // [NUEVO] Crear el mapa de hoteles (para mostrar nombres en la tabla)
         $hotelesMap = [];
         foreach ($hoteles as $hotel) {
             // Asumiendo que 'usuario' es el nombre del hotel, 
@@ -44,11 +44,11 @@ public function dashboard()
             $hotelesMap[$hotel['id_hotel']] = $hotel['usuario']; 
         }
 
-        // 3. [NUEVO] Obtener las reservas
+        // [NUEVO] Obtener las reservas
         // Usamos el mismo método que en ReservaController para admin
         $reservas = $this->reservaModel->getTodasReservas();
 
-        // 4. [MODIFICADO] Pasar los nuevos datos a la vista
+        // [MODIFICADO] Pasar los nuevos datos a la vista
         $data = [
             'title'          => 'Admin Dashboard',
             'totalHoteles'   => $totalHoteles,
@@ -164,5 +164,67 @@ public function calendar()
 
         $this->loadView('admin/hoteles', $data);
     }
+
+    public function crearHotelPost()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $usuario = $_POST['usuario'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $comision = $_POST['comision'] ?? 0;
+
+        if ($this->hotelModel->crearHotel($usuario, $password, $comision)) {
+            header("Location: " . APP_URL . "/admin/hoteles");
+            exit;
+        }
+
+        die("Error al crear hotel");
+    }
+}
+
+    public function editarHotel($id)
+{
+    $hotel = $this->hotelModel->getById((int)$id);
+
+    if (!$hotel) {
+        die("Hotel no encontrado");
+    }
+
+    $data = [
+        'title' => 'Editar Hotel',
+        'hotel' => $hotel
+    ];
+
+    $this->loadView('admin/editarHotel', $data);
+}
+
+public function editarHotelPost($id)
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $datos = [
+            'usuario' => $_POST['usuario'] ?? '',
+            'comision' => $_POST['comision'] ?? 0,
+            'password' => $_POST['password'] ?? null
+        ];
+
+        if ($this->hotelModel->actualizarHotel((int)$id, $datos)) {
+            header("Location: " . APP_URL . "/admin/hoteles");
+            exit;
+        }
+
+        die("Error al actualizar hotel");
+    }
+}
+
+public function eliminarHotel($id)
+{
+    if ($this->hotelModel->eliminarHotel((int)$id)) {
+        header("Location: " . APP_URL . "/admin/hoteles");
+        exit;
+    }
+
+    die("Error al eliminar hotel");
+}
 
 }

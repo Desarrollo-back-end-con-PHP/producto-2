@@ -38,21 +38,84 @@ main {
 .calendar-table td {
     height: 120px;
     vertical-align: top;
-    padding: 4px;
+    padding: 5px; 
     overflow: hidden;
     position: relative;
+}
+
+.calendar-table .add-cell-link {
+
+    display: block;
+    width: 100%;
+    padding: 5px 0;
+    text-align: center;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.calendar-table .add-cell-link:hover {
+    background-color: #e3f2fd; 
+    cursor: pointer;
+    color: #0b5ed7; 
+}
+
+.calendar-table .add-cell-link .cell-plus-icon {
+    margin-right: 5px;
+    line-height: 1;
+}
+
+.card.text-bg-primary {
+    background-color: #0d6efd !important; 
+    color: white !important;
+}
+.card.text-bg-primary .stretched-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+.card.text-bg-primary .stretched-link:hover {
+    color: white !important;
+}
+
+.card.text-bg-secondary {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+.card.text-bg-secondary .stretched-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+.card.text-bg-secondary .stretched-link:hover {
+    color: white !important;
+}
+
+.card.text-bg-info {
+    background-color: #17a2b8 !important; 
+    color: white !important;
+}
+.card.text-bg-info .stretched-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+.card.text-bg-info .stretched-link:hover {
+    color: white !important;
 }
 
 .cell-day {
     font-weight: bold;
     font-size: 0.9rem;
-    text-align: left;
-    padding-left: 5px;
+    text-align: right; 
+    padding-left: 0; 
+    padding-right: 0;
     color: #6c757d;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
+    margin-bottom: 5px;
+    position: relative; 
 }
+
 
 .calendar-table td.bg-light .cell-day {
     color: #b3b3b3;
@@ -95,54 +158,36 @@ main {
     color: white;
 }
 
-/* ============================================ */
-/* 1. ESTILOS PARA EL HERO CON IMAGEN */
-/* ============================================ */
-
 .hero-section-with-image {
-    /* AQUÍ PONES LA URL DE TU IMAGEN
-      Ej: url('https://tusitio.com/img/playa-transfer.jpg') 
-    */
     background-image: url('.././img/hero-image.webp');
-    
-    background-size: cover;       /* Cubre todo el área */
-    background-position: center;  /* Centra la imagen */
-    padding: 10rem 0;             /* Espaciado vertical (alto) */
-    position: relative;           /* Necesario para la capa de superposición */
+    background-size: cover; 
+    background-position: center; 
+    padding: 10rem 0; 
+    position: relative; 
 }
 
-/* Capa de superposición oscura */
 .hero-section-with-image .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Negro con 50% de opacidad */
+    background-color: rgba(0, 0, 0, 0.5); 
     z-index: 1;
 }
 
-/* Contenedor del texto (para que esté por ENCIMA de la superposición)
-  Bootstrap usa 'position-relative' para esto, así que ya está en el HTML.
-*/
 .hero-section-with-image .container {
     z-index: 2;
 }
 
-
-/* ============================================ */
-/* 3. ESTILOS PARA LOS ICONOS DE "CÓMO FUNCIONA" */
-/* ============================================ */
-
 .feature-icon-simple {
     width: 4rem;
     height: 4rem;
-    border-radius: 50%; /* Círculo perfecto */
+    border-radius: 50%; 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
-
 
 @media (min-width: 992px) {
     .navbar-nav .dropdown-menu-end {

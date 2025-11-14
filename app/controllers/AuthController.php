@@ -95,7 +95,7 @@ public function authenticate()
         }
         // Redirigir al panel de admin si es admin, o al perfil si es particular
         if ($_SESSION['user_rol'] === 'admin') {
-            header('Location: ' . APP_URL . '/admin/calendar');
+            header('Location: ' . APP_URL . '/admin/dashboard');
             exit;
         } else {
             header('Location: ' . APP_URL . '/usuario/mostrarPerfil');

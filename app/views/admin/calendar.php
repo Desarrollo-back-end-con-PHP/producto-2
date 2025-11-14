@@ -13,8 +13,10 @@ $fecha_siguiente_nav = $data['fecha_siguiente_nav'];
 $reservas_por_dia = [];
 foreach ($reservas as $res) {
     if (!empty($res['fecha_entrada'])) {
+        // Almacena la reserva por fecha de entrada (Llegada)
         $reservas_por_dia[$res['fecha_entrada']][] = $res;
     }
+    // Almacena la reserva por fecha de salida (Vuelta), si es diferente
     if (!empty($res['fecha_vuelo_salida']) && $res['fecha_vuelo_salida'] !== $res['fecha_entrada']) {
         $reservas_por_dia[$res['fecha_vuelo_salida']][] = $res;
     }
@@ -76,10 +78,17 @@ $hoy = new \DateTime('today');
                             $clase_css = ($dia_actual->format('m') != $fecha_base->format('m')) ? 'text-muted bg-light' : '';
                             $fecha_iso = $dia_actual->format('Y-m-d');
                     ?>
-                            <td class="<?php echo $clase_css; ?>">
-                                <div class="cell-day"><?php echo $dia_actual->format('j'); ?></div>
+                                
+                            <td class="calendar-cell <?php echo $clase_css; ?>">
+                                
+                                <div class="cell-day <?php if ($dia_actual->format('Y-m-d') == $hoy->format('Y-m-d')) echo 'text-primary fw-bold'; ?>">
+                                    <?php echo $dia_actual->format('j'); ?>
+                                </div>
+                                
                                 <div class="cell-content">
                                     <?php
+                                    $can_add = ($dia_actual >= $hoy);
+
                                     if (isset($reservas_por_dia[$fecha_iso])):
                                         foreach ($reservas_por_dia[$fecha_iso] as $res):
                                             $es_llegada = ($res['fecha_entrada'] == $fecha_iso);
@@ -88,7 +97,7 @@ $hoy = new \DateTime('today');
                                             $hora = $es_llegada ? ($res['hora_entrada'] ?? '') : ($res['hora_recogida'] ?? '');
                                     ?>
                                             <a href="<?php echo APP_URL; ?>/reserva/editar/<?php echo $res['id_reserva']; ?>" 
-                                               class="badge <?php echo $color_badge; ?> text-white d-block mb-1 text-start text-decoration-none">
+                                                class="badge <?php echo $color_badge; ?> text-white d-block mb-1 text-start text-decoration-none reservation-badge">
                                                 <?php echo $icono; ?>
                                                 <?php echo htmlspecialchars(substr($hora, 0, 5)); ?>
                                                 <?php echo htmlspecialchars($res['nombre_hotel']); ?>
@@ -97,22 +106,24 @@ $hoy = new \DateTime('today');
                                         endforeach;
                                     endif;
 
-                                    if ($dia_actual >= $hoy):
+                                    // ENLACE DE CREACIÓN (SOLO EN ESPACIO RESTANTE Y FECHAS FUTURAS)
+                                    if ($can_add):
                                     ?>
-                                        <div class="add-reserva-container">
-                                            <a href="<?php echo APP_URL; ?>/reserva/crear?fecha=<?php echo $fecha_iso; ?>" 
-                                               class="add-reserva-btn">+</a>
-                                        </div>
+                                        <a href="<?php echo APP_URL; ?>/reserva/crear?fecha=<?php echo $fecha_iso; ?>" 
+                                            class="add-cell-link">
+                                            <i class="bi bi-plus-lg cell-plus-icon"></i> Añadir
+                                        </a>
                                     <?php endif; ?>
                                 </div>
                             </td>
-                    <?php
-                            if ($dia_actual->format('N') == 7) {
-                                echo '</tr>';
-                            }
-                            $dia_actual->modify('+1 day');
-                        endwhile;
+                            <?php
+                                if ($dia_actual->format('N') == 7) {
+                                    echo '</tr>';
+                                }
+                                $dia_actual->modify('+1 day');
+                            endwhile;
                     else:
+                        // Código para las vistas "Semana" y "Día" (se mantiene sin cambios)
                         echo '<tr><td colspan="7">';
                         if (empty($reservas)) {
                             echo '<div class="p-5 text-center text-muted">No hay reservas para ' . ($vista == 'semana' ? 'esta semana.' : 'este día.') . '</div>';

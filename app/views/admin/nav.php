@@ -19,7 +19,7 @@ if (isset($data['fecha_base']) && $vista_actual == 'calendar') {
     <li class="nav-item">
         <a class="nav-link <?php if ($vista_actual == 'dashboard') echo 'active'; ?>" 
            href="<?php echo APP_URL; ?>/admin/dashboard">
-           <i class="bi bi-bar-chart-line-fill"></i> Dashboard
+           <i class="bi bi-bar-chart-line-fill"></i> Información
         </a>
     </li>
     <li class="nav-item">
