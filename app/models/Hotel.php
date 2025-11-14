@@ -18,21 +18,24 @@ class Hotel extends Model
      */
     public function getAll()
     {
-        $sql = "SELECT id_hotel, usuario, id_zona FROM tranfer_hotel WHERE status = 'activo' ORDER BY usuario ASC";
-
+        $sql = "SELECT id_hotel, usuario, Comision AS comision, id_zona 
+                FROM tranfer_hotel 
+                WHERE status = 'activo'
+                ORDER BY usuario ASC";
+    
         $stmt = $this->db->prepare($sql);
-
         if ($stmt === false) {
             error_log("Error al preparar la consulta de hoteles: " . $this->db->error);
             return false;
         }
-
+    
         $stmt->execute();
         $resultado = $stmt->get_result();
-
-        // Devolvemos todos los resultados como un array asociativo
+    
         return $resultado->fetch_all(MYSQLI_ASSOC);
     }
+
+
 
     /**
      * Obtiene los detalles de un hotel específico por su ID.
@@ -59,7 +62,7 @@ class Hotel extends Model
         return $resultado->fetch_assoc();
     }
 
-    public function crearHotel($nombre_usuario, $password, $comision)
+    public function crearhotel($nombre_usuario, $password, $comision)
     {
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
